@@ -1,16 +1,15 @@
-import * as express from "express";
-import { Request, Response } from "express";
-const app = express();
-const { PORT = 3000 } = process.env;
-app.get("/", (req: Request, res: Response) => {
-    res.send({
-        message: "hello world 4ssss",
-    });
-});
+import "dotenv/config";
+import App from "./App";
 
-if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log("server started at http://localhost:" + PORT);
-    });
-}
-export default app;
+import UserRouter from "@features/users/router";
+import { TestPublicRouter, TestPrivateRouter } from "@features/test/router";
+
+const primaryRoutes = [UserRouter, TestPublicRouter];
+const secondaryRoutes = [TestPrivateRouter];
+
+const app = new App(
+  [].concat(primaryRoutes, secondaryRoutes),
+  "/api"
+);
+
+app.listen();
