@@ -34,6 +34,17 @@ export class RegisterController extends HttpController {
       } as IHttpResult;
     }
 
+    if (request.password.length < 8) {
+      return {
+        statusCode: 400,
+        body: {
+          errors: {
+            password: "Minimum 8 characters required",
+          },
+        },
+      } as IHttpResult;
+    }
+
     if (!emailIsValid(request.email)) {
       return {
         statusCode: 400,
