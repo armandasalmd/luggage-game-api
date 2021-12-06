@@ -1,0 +1,39 @@
+version: 2.1
+orbs:
+    heroku: circleci/heroku@1.2.2
+    node: circleci/node@4.1.0
+commands:
+    npm_full_compile:
+        steps:
+            - run: yarn
+            - run: yarn linter
+            - run: yarn build
+jobs:
+    test:
+        docker:
+            - image: cimg/node:14.13.1
+        steps:
+            - checkout
+            - npm_full_compile
+    deploy:
+        executor: heroku/default
+        steps:
+            - checkout
+            - heroku/install
+            - heroku/deploy-via-git
+workflows:
+    heroku_deploy:
+        jobs:
+            - test:
+                filters:
+                    branches:
+                        only:
+                            - production
+            - deploy:
+                filters:
+                    branches:
+                        only:
+                            - production
+                requires:
+                    - test
+                context: Heroku

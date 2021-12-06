@@ -3,6 +3,13 @@ const { NODE_ENV = "production" } = process.env;
 const nodeExternals = require("webpack-node-externals");
 const WebpackShellPlugin = require("webpack-shell-plugin-next");
 
+const onBuildEnd = new WebpackShellPlugin({
+  onBuildEnd: {
+    scripts: ["yarn run:dev"],
+    parallel: true,
+  },
+});
+
 module.exports = {
   entry: "./src/index.ts",
   mode: NODE_ENV.trim(),
@@ -31,12 +38,5 @@ module.exports = {
   },
   externals: [nodeExternals()],
   watch: NODE_ENV.trim() === "development",
-  plugins: [
-    new WebpackShellPlugin({
-      onBuildEnd: {
-        scripts: ["yarn run:dev"],
-        parallel: true,
-      },
-    }),
-  ],
+  plugins: NODE_ENV.trim() === "development" ? [onBuildEnd] : [],
 };
