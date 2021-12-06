@@ -2,13 +2,14 @@ import { cleanEnv, port, str } from "envalid";
 
 export class BaseConfig {
   public validate() {
-    cleanEnv(process.env, {
+    const variables = {
       PORT: port(),
       NODE_ENV: str(),
       JWT_SECRET: str(),
-      MONGO_URI_DEV: str(),
-      MONGO_URI_PROD: str(),
-    });
+    };
+
+    variables[process.env.NODE_ENV === "development" ? "MONGO_URI_DEV" : "MONGO_URI_PROD"] = str();
+    cleanEnv(process.env, variables);
   }
 
   protected getString(key: string): string {
