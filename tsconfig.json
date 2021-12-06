@@ -12,7 +12,7 @@
     "lib": ["es6"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./dist",
+    "outDir": "./build",
     "paths": {
       "@core/*": ["./core/*"],
       "@database/*": ["./database/*"],

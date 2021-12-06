@@ -42,6 +42,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "start": "node ./build/index.js",
     "start:dev": "SET NODE_ENV=development & webpack",
     "run:dev": "SET NODE_ENV=development& nodemon --watch build build/index.js ",
     "linter": "tslint -c tslint.json -p tsconfig.json"
