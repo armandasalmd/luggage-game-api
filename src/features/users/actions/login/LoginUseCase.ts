@@ -43,6 +43,7 @@ export class LoginUseCase implements IUseCase<LoginRequest, LoginResponse> {
     return Result.ok<LoginResponse>({
       success: true,
       token: "Bearer " + token,
+      coins: user.coins
     });
   }
 }
