@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import { IRoute } from "@core/interfaces";
 import { GetCoinsController } from "../actions/getCoins/GetCoinsController";
 import { LoginController } from "../actions/login/LoginController";
