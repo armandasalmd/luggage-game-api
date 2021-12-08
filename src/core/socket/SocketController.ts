@@ -40,4 +40,8 @@ export default abstract class SocketController<T> {
   protected joinRoom(roomId: string) {
     this.socket.join(roomId);
   }
+  
+  protected leaveRoom(roomId: string) {
+    this.socket.leave(roomId);
+  }
 }

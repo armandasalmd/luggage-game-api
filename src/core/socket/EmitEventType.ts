@@ -1,1 +1,1 @@
-export type EmitEventType = "lobby player joined";
+export type EmitEventType = "lobby player joined" | "lobby player left";
