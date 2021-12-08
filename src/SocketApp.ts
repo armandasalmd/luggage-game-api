@@ -53,7 +53,7 @@ export default class SocketApp {
   }
 
   private onDisconnection(socket: Socket): void {
-    leaveLobbyEvent.controller.execute(undefined, () => {}, socket);
+    leaveLobbyEvent.controller.execute(undefined, () => undefined, socket);
   }
 
   private authMiddleware(socket: Socket, next: any): void {
