@@ -30,7 +30,11 @@ export default class SocketApp {
   private static createIOServer(httpServer: HttpServer): Server {
     return new Server(httpServer, {
       cors: {
-        origin: ["https://admin.socket.io", "http://localhost:3000"],
+        origin: [
+          "https://admin.socket.io",
+          "http://localhost:3000",
+          "https://luggage-game.vercel.app",
+        ],
         credentials: true,
       },
     });
@@ -44,9 +48,7 @@ export default class SocketApp {
 
   private onConnection(socket: Socket): void {
     // runs all the time client connects to the server
-    registerSocketRoutersOnSocket(socket, [
-      LobbySocketRouter
-    ]);
+    registerSocketRoutersOnSocket(socket, [LobbySocketRouter]);
   }
 
   private authMiddleware(socket: Socket, next: any): void {
