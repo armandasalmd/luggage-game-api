@@ -24,11 +24,16 @@ export default class PlayerReadyUseCase
     }
 
     lobby.players[playerIndex].ready = true;
-    await lobby.save();
 
-    const isEveryoneReady = lobby.players.every(function (player) {
+    const isEveryoneReady = lobby.players.every((player) => {
       return player.ready;
     });
+
+    if (isEveryoneReady) {
+      lobby.state = "gameStarted";
+    }
+
+    await lobby.save();
 
     return Result.ok({
       roomId: lobby.roomCode,
