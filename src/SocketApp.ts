@@ -9,7 +9,7 @@ import { registerSocketRoutersOnSocket } from "@core/socket";
 /**
  * Socket routers
  */
-import { LobbySocketRouter } from "@features/lobby/infra/LobbySocketRouter";
+import { LobbySocketRouter, leaveLobbyEvent } from "@features/lobby/infra/LobbySocketRouter";
 
 export default class SocketApp {
   public envConfig: EnvConfig;
@@ -49,6 +49,11 @@ export default class SocketApp {
   private onConnection(socket: Socket): void {
     // runs all the time client connects to the server
     registerSocketRoutersOnSocket(socket, [LobbySocketRouter]);
+    socket.on("disconnect", this.onDisconnection.bind(this, socket));
+  }
+
+  private onDisconnection(socket: Socket): void {
+    leaveLobbyEvent.controller.execute(undefined, () => {}, socket);
   }
 
   private authMiddleware(socket: Socket, next: any): void {

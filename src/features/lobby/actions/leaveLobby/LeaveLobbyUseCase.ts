@@ -22,17 +22,24 @@ export default class LeaveLobbyUseCase
         (player) => player.username === user.username
       ) as LobbyPlayerDocument;
 
+      // if last remaining player - remove lobby entirely
+      if (lobby.players.length === 1) {
+        await lobby.remove();
+        continue;
+      }
+
       if (leavingPlayer) {
         await leavingPlayer.remove();
-        await lobby.save();
+
+        // reset everyones ready state
+        for (const player of lobby.players) {
+          player.ready = false;
+        }
       } else {
         return Result.fail("Player not found");
       }
 
-      // remove lobby if no players left
-      if (lobby.players.length === 0) {
-        await lobby.remove();
-      }
+      await lobby.save();
     }
 
     return Result.ok({

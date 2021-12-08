@@ -17,4 +17,4 @@ const LobbySocketRouter: ISocketRouter = {
   events: [joinLobbyEvent, leaveLobbyEvent],
 };
 
-export { LobbySocketRouter };
+export { LobbySocketRouter, leaveLobbyEvent };

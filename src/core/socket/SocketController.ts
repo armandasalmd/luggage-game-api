@@ -7,7 +7,7 @@ export default abstract class SocketController<T> {
   protected dataIn: T;
   protected socket: Socket;
 
-  public get user(): IPayload {
+  protected get user(): IPayload {
     return this.socket.data.user;
   }
 
