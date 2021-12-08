@@ -11,7 +11,7 @@ commands:
 jobs:
     test:
         docker:
-            - image: cimg/node:14.13.1
+            - image: cimg/node:14.17.5
         steps:
             - checkout
             - npm_full_compile
