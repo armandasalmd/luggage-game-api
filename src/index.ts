@@ -3,7 +3,7 @@ import App from "./App";
 
 import { UserRouter, UserPrivateRouter } from "@features/users/router";
 import { TestPublicRouter, TestPrivateRouter } from "@features/test/router";
-import { LobbyRouter } from "@features/lobby/router";
+import { LobbyRouter } from "@features/lobby/infra/LobbyHttpRouter";
 
 // Public routers
 const primaryRoutes = [UserRouter, TestPublicRouter];

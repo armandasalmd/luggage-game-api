@@ -53,3 +53,9 @@ export function emailIsValid(email: string): boolean {
 
   return reg.test(email);
 }
+
+export function callIfFunction(...args: any[]): void {
+  if (typeof args[0] === "function") {
+    args[0](...args.splice(1));
+  }
+}

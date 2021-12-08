@@ -1,0 +1,1 @@
+export type EmitEventType = "lobby player joined";

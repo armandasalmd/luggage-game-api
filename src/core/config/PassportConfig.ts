@@ -1,14 +1,10 @@
 import { ExtractJwt } from "passport-jwt";
 import { BaseConfig } from "./BaseConfig";
-import { EnvConfig } from "./EnvConfig";
 import { ILocalStrategyOptions } from "@core/auth/strategies";
 
 export class PassportConfig extends BaseConfig {
-  private envConfig: EnvConfig;
-
   constructor() {
     super();
-    this.envConfig = new EnvConfig();
   }
 
   public get expiresIn(): number {

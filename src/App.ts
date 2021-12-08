@@ -4,12 +4,13 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import logger from "morgan";
 import path from "path";
+import { createServer, Server as HttpServer } from "http";
 
 import { EnvConfig, MongoConfig } from "@core/config";
 import { IRoute } from "@core/interfaces";
 import PassportManager from "@core/auth/PassportManager";
 import { AuthMiddleware, CorsMiddleware } from "@core/middlewares";
-
+import SocketApp from "./SocketApp";
 class App {
   /**
    * Properties
@@ -19,6 +20,8 @@ class App {
   public mongoConfig: MongoConfig;
   public prefix: string;
   public passportManager: PassportManager;
+  public httpServer: HttpServer;
+  public socketApp: SocketApp;
 
   /**
    * Getter properties
@@ -33,6 +36,8 @@ class App {
    */
   constructor(routes: IRoute[], prefix?: string) {
     this.app = express();
+    this.httpServer = createServer(this.app);
+
     this.envConfig = new EnvConfig();
     this.mongoConfig = new MongoConfig();
     this.prefix = prefix;
@@ -46,6 +51,8 @@ class App {
     this.passportManager.init();
     this.initRoutes(routes);
     this.initDefaultHandler();
+
+    this.socketApp = new SocketApp(this.envConfig, this.httpServer);
   }
 
   private connectToDatabase() {
@@ -100,7 +107,7 @@ class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    this.httpServer.listen(this.port, () => {
       console.log(`App listening on the port ${this.port}`);
     });
   }
