@@ -18,6 +18,10 @@ export default class LeaveLobbyUseCase
     const roomIds = activeLobbies.map((lobby) => lobby.roomCode);
 
     for (const lobby of activeLobbies) {
+      if (lobby.state !== "active") {
+        continue;
+      }
+
       const leavingPlayer = lobby.players.find(
         (player) => player.username === user.username
       ) as LobbyPlayerDocument;

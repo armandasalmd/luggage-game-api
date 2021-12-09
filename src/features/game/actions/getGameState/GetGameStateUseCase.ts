@@ -1,5 +1,5 @@
 import { IUseCase, Result } from "@core/logic";
-import { IGameModel, IPlayerModel, GameModel } from "@database";
+import { IGameModel, IPlayerModel, GameModel, ILobbyModel, LobbyModel } from "@database";
 import GetGameStateRequest from "@features/game/models/GetGameStateRequest";
 import { GetGameStateResponse } from "@features/game/models/GetGameStateResponse";
 import IGameDetails from "@features/game/models/IGameDetails";
@@ -29,14 +29,21 @@ export default class GetGameStateUseCase
     if (!myPlayerState) {
       return Result.fail("Cannot create my player state");
     }
+    
+    const lobby: ILobbyModel = await LobbyModel.findOne({ roomCode: request.roomId });
+    
+    if (!lobby) {
+      return Result.fail("Lobby not found");
+    }
 
     const output: GetGameStateResponse = {
-      gameDetails: this.createGameDetails(gameModel),
       myState: myPlayerState,
+      gameDetails: this.createGameDetails(gameModel),
       playersState: this.createOtherPlayerStates(
         gameModel,
         request.requestingUsername
       ),
+      lobby
     };
 
     return Result.ok(output);
@@ -47,7 +54,7 @@ export default class GetGameStateUseCase
       activeSeatId: model.activeSeatId,
       deadCardsCount: model.deadDeck.length,
       sourceCardsCount: model.sourceDeck.length,
-      topPlayCard: model.playDeck[model.playDeck.length - 1],
+      topPlayCard: model.playDeck[model.playDeck.length - 1] || "",
     };
   }
 

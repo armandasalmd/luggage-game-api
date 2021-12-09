@@ -8,6 +8,6 @@ const GameRouter: IRoute = {
   authRequired: true,
 };
 
-GameRouter.router.get("/state", (req, res) => new GetGameStateController().execute(req, res));
+GameRouter.router.post("/getState", (req, res) => new GetGameStateController().execute(req, res));
 
 export { GameRouter };
