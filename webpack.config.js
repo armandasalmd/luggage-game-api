@@ -13,6 +13,7 @@ const onBuildEnd = new WebpackShellPlugin({
 module.exports = {
   entry: "./src/index.ts",
   mode: NODE_ENV.trim(),
+  devtool: "source-map",
   target: "node",
   output: {
     path: path.resolve(__dirname, "build"),
