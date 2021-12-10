@@ -15,7 +15,7 @@ export class LoginController extends HttpController {
     const emptyErrors = getEmptyErrors(request);
     
     if (emptyErrors) {
-      this.json(400, emptyErrors);
+      return { statusCode: 400, body: emptyErrors };
     }
 
     if (!emailIsValid(request.email)) {

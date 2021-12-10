@@ -7,6 +7,8 @@ function corsMiddleware(req: Request, res: Response, next: NextFunction) {
 
   if (allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
+  } else {
+    console.warn("Rejected origin:", origin);
   }
 
   res.header(
