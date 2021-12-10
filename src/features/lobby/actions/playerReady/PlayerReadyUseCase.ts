@@ -9,6 +9,7 @@ export default class PlayerReadyUseCase
   async execute(user: IPayload): Promise<Result<PlayerReadyResult>> {
     const lobby: LobbyDocument = await LobbyModel.findOne({
       "players.username": user.username,
+      state: "active"
     });
 
     if (!lobby) {

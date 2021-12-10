@@ -80,7 +80,7 @@ class App {
 
       const limiter = rateLimit({
         windowMs: 600000, // 10 minutes
-        max: 1800,
+        max: 800,
         message: "Too many requests made to the server. Try again later!",
       });
 
