@@ -3,4 +3,5 @@ export default interface IMyPlayerState {
   luggageCards: string;
   handCards: string[];
   playerState: string;
+  lastMoves: string[];
 }

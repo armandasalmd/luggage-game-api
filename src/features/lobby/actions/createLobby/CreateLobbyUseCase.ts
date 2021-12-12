@@ -1,7 +1,13 @@
 import { IUseCase, Result } from "@core/logic";
 import { CreateLobbyRequest } from "@features/lobby/models/CreateLobbyRequest";
 import { CreateLobbyResponse } from "@features/lobby/models/CreateLobbyResponse";
-import { ILobbyModel, ILobbyPlayerModel, LobbyModel } from "@database";
+import {
+  ILobbyModel,
+  ILobbyPlayerModel,
+  LobbyModel,
+  UserModel,
+  IUserModel,
+} from "@database";
 import { IPayload } from "@core/interfaces";
 import { genRoomCode } from "@utils/Lobby";
 
@@ -12,6 +18,10 @@ export default class CreateLobbyUseCase
     req: CreateLobbyRequest,
     user: IPayload
   ): Promise<Result<CreateLobbyResponse>> {
+    if (!await this.userHasEnoughCoins(req.gamePrice, user.username)) {
+      return Result.fail("Not enough coins to start the game");
+    }
+    
     const creatorPlayer: ILobbyPlayerModel = {
       avatar: user.avatar,
       username: user.username,
@@ -25,7 +35,7 @@ export default class CreateLobbyUseCase
     do {
       roomCode = genRoomCode();
       loopProtector++;
-    } while (await this.codeExists(roomCode) && loopProtector < 10);
+    } while ((await this.codeExists(roomCode)) && loopProtector < 10);
 
     if (loopProtector === 10) {
       return Result.fail("Cannot assign room code");
@@ -58,7 +68,18 @@ export default class CreateLobbyUseCase
     }
   }
 
+  private async userHasEnoughCoins(
+    gameCost: number,
+    username: string
+  ): Promise<boolean> {
+    const user: IUserModel = await UserModel.findOne({
+      username,
+    });
+
+    return !!user && user.coins >= gameCost;
+  }
+
   private async codeExists(roomCode: string): Promise<boolean> {
-    return !!await LobbyModel.findOne({ roomCode });
+    return !!(await LobbyModel.findOne({ roomCode }));
   }
 }

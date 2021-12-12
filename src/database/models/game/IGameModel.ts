@@ -1,4 +1,5 @@
 import IPlayerModel from "./IPlayerModel";
+import { GameRulesType } from "@utils/Lobby";
 
 export default interface IGameModel {
   deadDeck: string[];
@@ -8,4 +9,5 @@ export default interface IGameModel {
   activeSeatId: number;
   players: IPlayerModel[];
   roomId: string;
+  rulesMode: GameRulesType;
 }

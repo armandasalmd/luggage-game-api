@@ -8,6 +8,7 @@ const PlayerSchema = new Schema<IPlayerModel>({
   luggageCards: { type: String, required: true },
   handCards: [{ type: String, required: true }],
   playerState: { type: String, required: true },
+  lastMoves: [{ type: String, required: true }],
 });
 
 const GameSchema = new Schema<IGameModel>({
@@ -17,6 +18,7 @@ const GameSchema = new Schema<IGameModel>({
   running: { type: Boolean, required: true, default: true },
   activeSeatId: { type: Number, required: true, default: 1 },
   roomId: { type: String, required: true },
+  rulesMode: { type: String, required: true },
   players: [PlayerSchema],
 });
 

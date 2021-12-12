@@ -5,13 +5,17 @@ import { instrument } from "@socket.io/admin-ui";
 import { EnvConfig, PassportConfig } from "@core/config";
 import { IPayload } from "@core/interfaces";
 import { registerSocketRoutersOnSocket } from "@core/socket";
+import GetGameRoomIdUseCase from "@features/game/actions/getGameRoomId/GetGameRoomIdUseCase";
 
 /**
  * Socket routers
  */
 import { LobbySocketRouter, leaveLobbyEvent } from "@features/lobby/infra/LobbySocketRouter";
+import { GameSocketRouter } from "@features/game/infra/GameSocketRouter";
 
 export default class SocketApp {
+  private static instance: SocketApp;
+
   public envConfig: EnvConfig;
   public passportConfig: PassportConfig;
   public io: Server;
@@ -25,6 +29,11 @@ export default class SocketApp {
     this.io.on("connection", this.onConnection.bind(this));
 
     this.setupAdminPage();
+    SocketApp.instance = this;
+  }
+
+  public static getInstance() {
+    return SocketApp.instance;
   }
 
   private static createIOServer(httpServer: HttpServer): Server {
@@ -48,7 +57,16 @@ export default class SocketApp {
 
   private onConnection(socket: Socket): void {
     // runs all the time client connects to the server
-    registerSocketRoutersOnSocket(socket, [LobbySocketRouter]);
+    registerSocketRoutersOnSocket(socket, [LobbySocketRouter, GameSocketRouter]);
+
+    const resultPromise = (new GetGameRoomIdUseCase()).execute(socket.data.user.username);
+    
+    resultPromise.then((result) => {
+      if (result.value) socket.join(result.value);
+    }).catch(() => {
+      console.warn("Could not rejoin active game");
+    });
+
     socket.on("disconnect", this.onDisconnection.bind(this, socket));
   }
 

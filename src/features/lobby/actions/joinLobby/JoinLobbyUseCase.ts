@@ -1,6 +1,12 @@
 import { IPayload } from "@core/interfaces";
 import { IUseCase, Result } from "@core/logic";
-import { LobbyModel, LobbyDocument, ILobbyPlayerModel } from "@database";
+import {
+  LobbyModel,
+  LobbyDocument,
+  ILobbyPlayerModel,
+  UserModel,
+  IUserModel,
+} from "@database";
 import { JoinLobbyRequest } from "@features/lobby/models/JoinLobbyRequest";
 import { JoinLobbyResult } from "@features/lobby/models/JoinLobbyResult";
 
@@ -27,11 +33,15 @@ export default class JoinLobbyUseCase
       return Result.fail("Lobby is full");
     }
 
+    if (!(await this.userHasEnoughCoins(lobby.gamePrice, user.username))) {
+      return Result.fail(`${lobby.gamePrice} coins are required to join`);
+    }
+
     const existingPlayer = this.findPlayer(lobby.players, user.username);
     if (existingPlayer) {
       return Result.ok({
         joinedPlayer: existingPlayer,
-        lobbyState: lobby
+        lobbyState: lobby,
       });
     }
 
@@ -47,17 +57,26 @@ export default class JoinLobbyUseCase
 
     return Result.ok({
       joinedPlayer: lobbyPlayer,
-      lobbyState: lobby
+      lobbyState: lobby,
     });
+  }
+
+  private async userHasEnoughCoins(
+    gameCost: number,
+    username: string
+  ): Promise<boolean> {
+    const user: IUserModel = await UserModel.findOne({
+      username,
+    });
+
+    return !!user && user.coins >= gameCost;
   }
 
   private findPlayer(
     players: ILobbyPlayerModel[],
     username: string
   ): ILobbyPlayerModel {
-    return players.find((player) => {
-      return player.username === username;
-    });
+    return players.find((player) => player.username === username);
   }
 
   private getAvailableSeat(

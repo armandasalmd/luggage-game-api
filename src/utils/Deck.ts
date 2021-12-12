@@ -48,6 +48,13 @@ export class Deck {
   }
 
   public take(count: number): string[] {
+    if (count >= this.cards.length) {
+      const result = [...this.cards];
+      this.cards = [];
+      
+      return result;
+    }
+
     const poppedCards: string[] = [];
 
     for (let i = 0; i < count; i++) {

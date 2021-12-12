@@ -4,4 +4,5 @@ export default interface IPlayerModel {
   luggageCards: string;
   handCards: string[];
   playerState: string;
+  lastMoves: string[];
 }

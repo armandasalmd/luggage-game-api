@@ -2,9 +2,8 @@ import { ISocketEvent, ISocketRouter } from "@core/socket";
 import JoinLobbyController from "../actions/joinLobby/JoinLobbySocketController";
 import LeaveLobbyController from "../actions/leaveLobby/LeaveLobbySocketController";
 import PlayerReadyController from "../actions/playerReady/PlayerReadyController";
-import { JoinLobbyRequest } from "../models/JoinLobbyRequest";
 
-const joinLobbyEvent: ISocketEvent<JoinLobbyRequest> = {
+const joinLobbyEvent: ISocketEvent<string> = {
   eventName: "lobby join",
   controller: new JoinLobbyController(),
 };

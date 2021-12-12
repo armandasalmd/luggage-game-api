@@ -1,8 +1,7 @@
 import { SocketController } from "@core/socket";
-import { JoinLobbyRequest } from "@features/lobby/models/JoinLobbyRequest";
 import JoinLobbyUseCase from "./JoinLobbyUseCase";
 
-export default class JoinLobbyController extends SocketController<JoinLobbyRequest> {
+export default class JoinLobbyController extends SocketController<string> {
   protected async executeImpl(dataIn: string) {
     const useCase = new JoinLobbyUseCase();
     const result = await useCase.execute({ roomId: dataIn }, this.user);

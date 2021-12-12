@@ -15,8 +15,18 @@ export default class CreateLobbyController extends HttpController {
     }
 
     const useCase = new CreateLobbyUseCase();
+    const result = await useCase.execute(req.body, req.user); 
 
-    return useCase.execute(req.body, req.user);
+    if (result.isFailure) {
+      return {
+        statusCode: 200,
+        body: {
+          errorMessage: result.error.message
+        }
+      } as IHttpResult;
+    }
+
+    return result;
   }
 
   private validation(body: CreateLobbyRequest): IHttpResult | undefined {

@@ -37,6 +37,7 @@ export default class StartGameUseCase
       running: true,
       activeSeatId: 1,
       players: playerModels,
+      rulesMode: lobby.gameRules,
       roomId
     };
 
@@ -57,6 +58,7 @@ export default class StartGameUseCase
       luggageCards: new Deck(playDeck.take(6)).toString(),
       handCards: playDeck.take(3),
       playerState: GameUtils.PlayerState.Playing,
+      lastMoves: []
     };
   }
 }
