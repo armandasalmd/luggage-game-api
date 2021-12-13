@@ -1,4 +1,4 @@
 export interface GetRunningGameResponse {
-  roomId: string;
+  roomId?: string;
   success: boolean;
 }

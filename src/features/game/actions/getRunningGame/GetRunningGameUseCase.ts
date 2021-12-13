@@ -12,7 +12,7 @@ export default class GetRunningGameUseCase
     }, { roomId: 1 }, { lean: true });
 
     return Result.ok({
-      roomId: game.roomId,
+      roomId: game?.roomId,
       success: !!game
     });
   }
