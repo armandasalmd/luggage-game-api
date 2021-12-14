@@ -14,6 +14,7 @@ export default class GetGameStateUseCase
     const gameModel: IGameModel = await GameModel.findOne({
       roomId: request.roomId,
       "players.username": request.requestingUsername,
+      running: true
     });
 
     if (!gameModel) {

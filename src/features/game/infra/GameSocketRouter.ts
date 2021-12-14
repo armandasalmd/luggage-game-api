@@ -1,6 +1,7 @@
 import { ISocketEvent, ISocketRouter } from "@core/socket";
 import FinishTurnSocketController from "../actions/finishTurn/FinishTurnSocketController";
 import PlayCardSocketController from "../actions/playCard/PlayCardSocketController";
+import SurrenderSocketController from "../actions/surrender/SurrenderSocketController";
 import { FinishTurnQuery } from "../models/FinishTurnQuery";
 import { PlayCardQuery } from "../models/PlayCardQuery";
 
@@ -14,8 +15,13 @@ const finishTurnEvent: ISocketEvent<FinishTurnQuery> = {
   controller: new FinishTurnSocketController(),
 };
 
+const surrenderEvent: ISocketEvent<void> = {
+  eventName: "game surrender",
+  controller: new SurrenderSocketController(),
+};
+
 const GameSocketRouter: ISocketRouter = {
-  events: [playCardEvent, finishTurnEvent],
+  events: [playCardEvent, finishTurnEvent, surrenderEvent],
 };
 
 export { GameSocketRouter };

@@ -5,4 +5,5 @@ export type EmitEventType =
   | "game can start"
   | "game details change"
   | "game my state change"
-  | "game player state change";
+  | "game player state change"
+  | "game finished";
