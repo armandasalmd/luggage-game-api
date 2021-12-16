@@ -6,4 +6,6 @@ export type EmitEventType =
   | "game details change"
   | "game my state change"
   | "game player state change"
-  | "game finished";
+  | "game finished"
+  | "game reward"
+  | "game looser";

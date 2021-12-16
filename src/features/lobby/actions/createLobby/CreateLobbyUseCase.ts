@@ -11,17 +11,14 @@ import {
 import { IPayload } from "@core/interfaces";
 import { genRoomCode } from "@utils/Lobby";
 
-export default class CreateLobbyUseCase
-  implements IUseCase<CreateLobbyRequest, CreateLobbyResponse>
+export default class CreateLobbyUseCase implements IUseCase<CreateLobbyRequest, CreateLobbyResponse>
 {
-  async execute(
-    req: CreateLobbyRequest,
-    user: IPayload
-  ): Promise<Result<CreateLobbyResponse>> {
-    if (!await this.userHasEnoughCoins(req.gamePrice, user.username)) {
+  async execute(req: CreateLobbyRequest, user: IPayload): Promise<Result<CreateLobbyResponse>> {
+
+    if (!(await this.userHasEnoughCoins(req.gamePrice, user.username))) {
       return Result.fail("Not enough coins to start the game");
     }
-    
+
     const creatorPlayer: ILobbyPlayerModel = {
       avatar: user.avatar,
       username: user.username,

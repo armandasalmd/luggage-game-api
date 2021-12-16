@@ -36,7 +36,8 @@ export default class PlayCardUseCase
 
     return Result.ok({
       newGameDetailsState: GameUtils.toGameDetails(game),
-      newMyState: GameUtils.toMyPlayerState(player)
+      newMyState: GameUtils.toMyPlayerState(player),
+      newPublicState: GameUtils.toPublicPlayerState(player)
     });
   }
 
@@ -49,7 +50,7 @@ export default class PlayCardUseCase
 
   private resetPlayDeckIfNeeded(game: IGameModel, cardsPut: string[]) {
     if (game.rulesMode === "classic") {
-      const found10Card = cardsPut.findIndex(card => card.startsWith("10"));
+      const found10Card = cardsPut.findIndex(card => !!(card && card.startsWith("10")));
 
       if (found10Card >= 0) {
         game.deadDeck.push(...game.playDeck);

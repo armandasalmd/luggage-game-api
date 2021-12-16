@@ -19,7 +19,7 @@ const toGameDetails = (game: IGameModel): IGameDetails => {
     sourceCardsCount: game.sourceDeck.length,
     topPlayCard: game.playDeck[game.playDeck.length - 1] || "",
   };
-}
+};
 
 const toMyPlayerState = (player: IPlayerModel): IMyPlayerState => {
   return {
@@ -27,9 +27,9 @@ const toMyPlayerState = (player: IPlayerModel): IMyPlayerState => {
     luggageCards: player.luggageCards,
     playerState: player.playerState,
     seatId: player.seatId,
-    lastMoves: player.lastMoves
+    lastMoves: player.lastMoves,
   };
-}
+};
 
 const toPublicPlayerState = (player: IPlayerModel): IPublicPlayerState => {
   return {
@@ -39,11 +39,30 @@ const toPublicPlayerState = (player: IPlayerModel): IPublicPlayerState => {
     seatId: player.seatId,
     username: player.username,
   };
-}
+};
+
+const getPlayerPlace = (place: number): string => {
+  const dict = ["1st", "2nd", "3rd", "4th", "5th"];
+
+  return dict[place - 1];
+};
+
+const getReward = (gamePrice: number, playersCount: number, place: number) => {
+  const winnable = gamePrice * 0.95;
+  const reward = winnable * (playersCount - place) / arithmeticSum(playersCount);
+
+  return Math.round(reward);
+
+  function arithmeticSum(n: number): number {
+    return n * (n - 1) / 2;
+  }
+};
 
 export default {
   PlayerState,
+  getPlayerPlace,
+  getReward,
   toGameDetails,
   toMyPlayerState,
-  toPublicPlayerState
+  toPublicPlayerState,
 };

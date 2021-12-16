@@ -7,7 +7,7 @@ export default class GetGameRoomIdUseCase implements IUseCase<string, string> {
     
     const game: IGameModel = await GameModel.findOne({
       "players.username": username,
-      "players.playerState": "playing"
+      running: true,
     });
 
     return Result.ok(game ? game.roomId : undefined);

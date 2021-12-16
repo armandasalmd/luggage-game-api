@@ -30,6 +30,15 @@ export default class FinishTurnSocketController extends SocketController<FinishT
     );
     this.emitToClient("game my state change", result.value.myState);
 
+    if (result.value.finishReward) {
+      this.emitToClient("game reward", result.value.finishReward);
+      this.emitToRoom(query.roomId, "game player state change", result.value.myPublicState);
+    }
+
+    if (result.value.looser) {
+      this.emitToRoomAll(query.roomId, "game looser", result.value.looser);
+    }
+
     return {
       success: true,
     };

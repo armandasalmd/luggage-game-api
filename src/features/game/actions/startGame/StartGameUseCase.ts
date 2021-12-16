@@ -38,7 +38,8 @@ export default class StartGameUseCase
       activeSeatId: 1,
       players: playerModels,
       rulesMode: lobby.gameRules,
-      roomId
+      roomId,
+      gamePrice: lobby.gamePrice
     };
 
     const gameModel = new GameModel(gameModelTemplate);

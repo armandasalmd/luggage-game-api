@@ -10,4 +10,5 @@ export default interface IGameModel {
   players: IPlayerModel[];
   roomId: string;
   rulesMode: GameRulesType;
+  gamePrice: number;
 }

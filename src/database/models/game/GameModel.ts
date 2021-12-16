@@ -20,6 +20,7 @@ const GameSchema = new Schema<IGameModel>({
   roomId: { type: String, required: true },
   rulesMode: { type: String, required: true },
   players: [PlayerSchema],
+  gamePrice: { type: Number, required: true },
 });
 
 export interface PlayerDocument extends IPlayerModel, Document {}

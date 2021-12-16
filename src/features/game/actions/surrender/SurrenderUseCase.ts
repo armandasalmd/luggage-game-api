@@ -12,6 +12,7 @@ import {
   GameFinishedRewards,
   PlayerReward,
 } from "@features/game/models/GameFinishedRewards";
+import GameUtils from "@utils/Game";
 
 export default class SurrenderUseCase
   implements IUseCase<string, GameFinishedRewards>
@@ -54,6 +55,7 @@ export default class SurrenderUseCase
       looserUsername: username,
       winners: this.getPlayerRewards(game.players, winReward),
       roomId: game.roomId,
+      gameDetails: GameUtils.toGameDetails(game)
     });
   }
 

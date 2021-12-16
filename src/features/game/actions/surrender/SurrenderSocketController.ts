@@ -13,6 +13,7 @@ export default class SurrenderSocketController extends SocketController<void> {
       };
     }
 
+    this.emitToRoom(result.value.roomId, "game details change", result.value.gameDetails);
     this.emitToRoom(result.value.roomId, "game finished", result.value.winners);
 
     return {

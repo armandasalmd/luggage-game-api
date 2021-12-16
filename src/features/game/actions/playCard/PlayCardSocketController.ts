@@ -30,6 +30,7 @@ export default class PlayCardController extends SocketController<PlayCardQuery> 
       "game details change",
       result.value.newGameDetailsState
     );
+    this.emitToRoom(dataIn.roomId, "game player state change", result.value.newPublicState);
     this.emitToClient("game my state change", result.value.newMyState);
 
     return {
