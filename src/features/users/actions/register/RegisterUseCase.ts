@@ -8,25 +8,9 @@ import { RegisterResponse } from "@features/users/models/RegisterResponse";
 export default class RegisterUseCase implements IUseCase<RegisterRequest, RegisterResponse> {
 
   async execute(request: RegisterRequest): Promise<Result<RegisterResponse>> {
-    let existingUser: UserDocument = await UserModel.findOne({
-      email: request.email,
-    }).exec();
-
-    if (existingUser) {
-      return Result.fail({
-        statusCode: 400,
-        message: "Duplicate error",
-        body: {
-          errors: {
-            email: "User with this email exists"
-          }
-        }
-      });
-    }
-
-    existingUser = await UserModel.findOne({
+    const existingUser: UserDocument = await UserModel.findOne({
       username: request.username,
-    }).exec();
+    }, { username: 1 }).exec();
 
     if (existingUser) {
       return Result.fail({
@@ -34,7 +18,7 @@ export default class RegisterUseCase implements IUseCase<RegisterRequest, Regist
         message: "Duplicate error",
         body: {
           errors: {
-            username: "User with this username exists"
+            email: "User with this username exists"
           }
         }
       });
@@ -42,7 +26,6 @@ export default class RegisterUseCase implements IUseCase<RegisterRequest, Regist
 
     const newUser = new UserModel({
       username: request.username,
-      email: request.email,
       password: await this.createHash(request.password),
       coins: 10000
     });

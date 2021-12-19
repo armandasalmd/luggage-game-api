@@ -3,7 +3,7 @@ import IUserModel from "./IUserModel";
 
 const UserSchema = new Schema<IUserModel>({
   username: { type: String, required: true },
-  email: { type: String, required: true },
+  email: String,
   coins: { type: Number, required: true },
   password: { type: String, required: true },
   avatar: String,

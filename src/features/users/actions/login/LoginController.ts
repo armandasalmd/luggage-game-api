@@ -2,13 +2,12 @@ import { HttpController, Request, IHttpResult } from "@core/logic";
 import { LoginRequest } from "@features/users/models/LoginRequest";
 import LoginUseCase from "./LoginUseCase";
 import { getEmptyErrors } from "@utils/Global";
-import { emailIsValid } from "@utils/Global";
 
 export class LoginController extends HttpController {
   protected async executeImpl(req: Request): Promise<void | IHttpResult> {
     const useCase = new LoginUseCase();
     const request: LoginRequest = {
-      email: req.body.email,
+      username: req.body.username,
       password: req.body.password
     };
 
@@ -18,12 +17,12 @@ export class LoginController extends HttpController {
       return { statusCode: 400, body: emptyErrors };
     }
 
-    if (!emailIsValid(request.email)) {
+    if (request.username.length < 5) {
       return {
         statusCode: 400,
         body: {
           errors: {
-            email: "Invalid email address",
+            email: "Invalid username",
           },
         },
       } as IHttpResult;

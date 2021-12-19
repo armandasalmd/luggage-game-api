@@ -3,7 +3,6 @@ import { RegisterRequest } from "@features/users/models/RegisterRequest";
 import RegisterUseCase from "./RegisterUseCase";
 import { getEmptyErrors } from "@utils/Global";
 import { RegisterResponse } from "@features/users/models/RegisterResponse";
-import { emailIsValid } from "@utils/Global";
 
 export class RegisterController extends HttpController {
   protected async executeImpl(
@@ -12,7 +11,6 @@ export class RegisterController extends HttpController {
     const useCase = new RegisterUseCase();
     const request: RegisterRequest = {
       username: req.body.username,
-      email: req.body.email,
       password: req.body.password,
       password2: req.body.password2,
     };
@@ -24,52 +22,33 @@ export class RegisterController extends HttpController {
     }
 
     if (request.username.length > 16) {
-      return {
-        statusCode: 400,
-        body: {
-          errors: {
-            username: "Maximum 16 characters allowed",
-          },
-        },
-      } as IHttpResult;
+      return this.createErrorBody("username", "Maximum 16 characters allowed");
+    }
+
+    if (request.username.length < 5) {
+      return this.createErrorBody("username", "Minumum 5 characters allowed");
     }
 
     if (request.password.length < 8) {
-      return {
-        statusCode: 400,
-        body: {
-          errors: {
-            password: "Minimum 8 characters required",
-          },
-        },
-      } as IHttpResult;
-    }
-
-    if (!emailIsValid(request.email)) {
-      return {
-        statusCode: 400,
-        body: {
-          errors: {
-            email: "Invalid email address",
-          },
-        },
-      } as IHttpResult;
+      return this.createErrorBody("password", "Minimum 8 characters required");
     }
 
     if (request.password !== request.password2) {
-      return {
-        statusCode: 400,
-        body: {
-          errors: {
-            password: "Passwords don't match",
-          },
-        },
-      } as IHttpResult;
+      return this.createErrorBody("password", "Passwords don't match");
     }
 
     return await useCase.execute(request);
     // or this.respondWithResult(result);
   }
 
-  
+  private createErrorBody(name: string, message: string): IHttpResult {
+    return {
+      statusCode: 400,
+      body: {
+        errors: {
+          [name]: message,
+        },
+      },
+    } as IHttpResult;
+  }
 }

@@ -23,7 +23,7 @@ export class LoginUseCase implements IUseCase<LoginRequest, LoginResponse> {
 
   async execute(request: LoginRequest): Promise<Result<LoginResponse>> {
     const user: UserDocument = await UserModel.findOne({
-      email: request.email,
+      username: request.username,
     }).exec();
 
     if (!user) {
