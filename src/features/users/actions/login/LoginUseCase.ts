@@ -12,12 +12,19 @@ import { getPayload } from "@utils/User";
 export class LoginUseCase implements IUseCase<LoginRequest, LoginResponse> {
   private passportConfig: PassportConfig;
   private readonly incorrectDetailsError: IHttpError;
+  private readonly passwordNotSetError: IHttpError;
 
   constructor() {
     this.passportConfig = new PassportConfig();
+    
     this.incorrectDetailsError = {
       statusCode: 400,
       message: "Incorrect details",
+    };
+
+    this.passwordNotSetError = {
+      statusCode: 400,
+      message: "Password not set. Use Google or Facebook login",
     };
   }
 
@@ -28,6 +35,10 @@ export class LoginUseCase implements IUseCase<LoginRequest, LoginResponse> {
 
     if (!user) {
       return Result.fail(this.incorrectDetailsError);
+    }
+
+    if (!user.password) {
+      return Result.fail(this.passwordNotSetError);
     }
 
     const isMatch = await bcrypt.compare(request.password, user.password);

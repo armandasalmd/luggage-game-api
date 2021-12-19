@@ -2,11 +2,14 @@ import { Schema, model, Document } from "mongoose";
 import IUserModel from "./IUserModel";
 
 const UserSchema = new Schema<IUserModel>({
-  username: { type: String, required: true },
-  email: String,
-  coins: { type: Number, required: true },
-  password: { type: String, required: true },
+  authStrategies: [String],
   avatar: String,
+  coins: { type: Number, required: true },
+  email: String,
+  firstname: String,
+  lastname: String,
+  password: String,
+  username: { type: String, required: true },
 });
 
 UserSchema.virtual("payload").get(function () {
