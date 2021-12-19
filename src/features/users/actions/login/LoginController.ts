@@ -17,12 +17,12 @@ export class LoginController extends HttpController {
       return { statusCode: 400, body: emptyErrors };
     }
 
-    if (request.username.length < 5) {
+    if (request.username.length < 4) {
       return {
         statusCode: 400,
         body: {
           errors: {
-            email: "Invalid username",
+            username: "Invalid username",
           },
         },
       } as IHttpResult;
