@@ -3,9 +3,9 @@ import jwt from "jsonwebtoken";
 import { Application } from "express";
 
 import { PassportConfig } from "@core/config";
-import { IPassportManager } from "./IPassportManager";
-import { LocalStrategy } from "./strategies";
 import { IPayload } from "@core/interfaces";
+import { IPassportManager } from "./IPassportManager";
+import { FacebookStrategy, GoogleStrategy, LocalStrategy } from "./strategies";
 import ISerializedUser from "./ISerializedUser";
 
 class PassportManager implements IPassportManager {
@@ -21,6 +21,9 @@ class PassportManager implements IPassportManager {
     this.app.use(passport.initialize());
 
     passport.use(LocalStrategy(this.passportConfig.localStrategyOptions));
+    passport.use(GoogleStrategy(this.passportConfig.googleStrategyOptions));
+    passport.use(FacebookStrategy(this.passportConfig.facebookStrategyOptions));
+
     passport.serializeUser(this.serializeUser.bind(this));
     passport.deserializeUser(this.deserializeUser.bind(this));
   }

@@ -1,5 +1,5 @@
 import UserModel, { UserDocument } from "./models/user/UserModel";
-import IUserModel from "./models/user/IUserModel";
+import IUserModel, { AuthStrategy } from "./models/user/IUserModel";
 import LobbyModel, {
   LobbyDocument,
   LobbyPlayerDocument,
@@ -11,6 +11,7 @@ import IPlayerModel from "./models/game/IPlayerModel";
 import GameModel, { GameDocument, PlayerDocument } from "./models/game/GameModel";
 
 export {
+  AuthStrategy,
   LobbyModel,
   ILobbyModel,
   ILobbyPlayerModel,

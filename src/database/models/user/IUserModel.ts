@@ -1,7 +1,15 @@
+export enum AuthStrategy {
+  Local = "local",
+  Google = "google",
+  Facebook = "facebook"
+}
 export default interface IUserModel {
-  username: string;
-  email?: string;
-  password: string;
-  coins: number;
+  authStrategies: AuthStrategy[];
   avatar?: string;
+  coins: number;
+  email?: string;
+  firstname?: string;
+  lastname?: string;
+  password?: string;
+  username: string;
 }

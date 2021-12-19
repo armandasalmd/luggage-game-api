@@ -18,6 +18,8 @@
     "mongoose": "^6.0.14",
     "morgan": "^1.10.0",
     "passport": "^0.5.0",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "socket.io": "^4.4.0",
     "ts-loader": "^9.2.6",
@@ -39,6 +41,8 @@
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.3",
     "@types/passport": "^1.0.7",
+    "@types/passport-facebook": "^2.1.11",
+    "@types/passport-google-oauth20": "^2.0.11",
     "@types/passport-jwt": "^3.0.6",
     "nodemon": "^2.0.15",
     "tslint": "^6.1.3"
