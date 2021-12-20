@@ -18,7 +18,7 @@ export default class RegisterUseCase implements IUseCase<RegisterRequest, Regist
         message: "Duplicate error",
         body: {
           errors: {
-            email: "User with this username exists"
+            username: "This username is taken"
           }
         }
       });
