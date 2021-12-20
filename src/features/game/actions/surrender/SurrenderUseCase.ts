@@ -8,15 +8,11 @@ import {
   UserModel,
   IPlayerModel,
 } from "@database";
-import {
-  GameFinishedRewards,
-  PlayerReward,
-} from "@features/game/models/GameFinishedRewards";
+import { GameFinishedRewards, PlayerReward } from "@features/game/models/GameFinishedRewards";
 import GameUtils from "@utils/Game";
+import AddCoinsUseCase from "@features/users/actions/addCoins/AddCoinsUseCase";
 
-export default class SurrenderUseCase
-  implements IUseCase<string, GameFinishedRewards>
-{
+export default class SurrenderUseCase implements IUseCase<string, GameFinishedRewards> {
   async execute(username: string): Promise<Result<GameFinishedRewards>> {
     const game: GameDocument = await GameModel.findOne({
       "players.username": username,
@@ -55,14 +51,11 @@ export default class SurrenderUseCase
       looserUsername: username,
       winners: this.getPlayerRewards(game.players, winReward),
       roomId: game.roomId,
-      gameDetails: GameUtils.toGameDetails(game)
+      gameDetails: GameUtils.toGameDetails(game),
     });
   }
 
-  private getPlayerRewards(
-    players: IPlayerModel[],
-    amount: number
-  ): PlayerReward[] {
+  private getPlayerRewards(players: IPlayerModel[], amount: number): PlayerReward[] {
     return players.map((item) => {
       return {
         reward: amount,
@@ -71,26 +64,18 @@ export default class SurrenderUseCase
     });
   }
 
-  private async addPlayerCoins(
-    username: string,
-    amount: number
-  ): Promise<boolean> {
-    const user: UserDocument = await UserModel.findOne({
+  private async addPlayerCoins(username: string, amount: number): Promise<boolean> {
+    const addCoins = new AddCoinsUseCase();
+
+    await addCoins.execute({
+      amount,
       username,
     });
 
-    if (user) {
-      user.coins = user.coins - amount;
-      await user.save();
-    }
-
-    return !!user;
+    return true;
   }
 
-  private async rewardPlayers(
-    game: GameDocument,
-    reward: number
-  ): Promise<boolean> {
+  private async rewardPlayers(game: GameDocument, reward: number): Promise<boolean> {
     let success = true;
 
     for (const player of game.players) {
