@@ -1,5 +1,11 @@
 import { Schema, model, Document } from "mongoose";
+import IDailyRewardModel from "./IDailyRewardModel";
 import IUserModel from "./IUserModel";
+
+const DailyRewardSchema = new Schema<IDailyRewardModel>({
+  lastClaimDay: { type: Number, required: true, default: 0 },
+  lastClaimDate: Date
+});
 
 const UserSchema = new Schema<IUserModel>({
   authStrategies: [String],
@@ -10,6 +16,7 @@ const UserSchema = new Schema<IUserModel>({
   lastname: String,
   password: String,
   username: { type: String, required: true },
+  dailyReward: DailyRewardSchema
 });
 
 UserSchema.virtual("payload").get(function () {
@@ -21,5 +28,6 @@ UserSchema.virtual("payload").get(function () {
   };
 });
 
+export interface DailyRewardDocument extends IDailyRewardModel, Document {}
 export interface UserDocument extends IUserModel, Document {}
 export default model<IUserModel & Document>("user", UserSchema);

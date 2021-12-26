@@ -59,3 +59,10 @@ export function callIfFunction(...args: any[]): void {
     args[0](...args.splice(1));
   }
 }
+
+export function dateDiffInHours(d1: Date, d2: Date): number {
+  const t1 = d1.getTime();
+  const t2 = d2.getTime();
+
+  return Math.floor((t2 - t1) / 3_600_000);
+}
