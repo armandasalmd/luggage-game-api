@@ -8,6 +8,8 @@ import { UserModel, UserDocument } from "@database";
 import { LoginRequest } from "@features/users/models/LoginRequest";
 import { LoginResponse } from "@features/users/models/LoginResponse";
 import { getPayload } from "@utils/User";
+import { CoinsAndRewardsResponse } from "@features/users/models/CoinsAndRewardsResponse";
+import { getDailyRewards } from "@utils/Reward";
 
 export class LoginUseCase implements IUseCase<LoginRequest, LoginResponse> {
   private passportConfig: PassportConfig;
@@ -51,10 +53,15 @@ export class LoginUseCase implements IUseCase<LoginRequest, LoginResponse> {
       expiresIn: this.passportConfig.expiresIn,
     });
 
+    const meta: CoinsAndRewardsResponse = {
+      coins: user.coins,
+      rewards: getDailyRewards(user.dailyReward),
+    };
+
     return Result.ok<LoginResponse>({
       success: true,
       token: "Bearer " + token,
-      coins: user.coins
+      ...meta
     });
   }
 }

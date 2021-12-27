@@ -1,3 +1,5 @@
+import IDailyRewardModel from "./IDailyRewardModel";
+
 export enum AuthStrategy {
   Local = "local",
   Google = "google",
@@ -12,4 +14,5 @@ export default interface IUserModel {
   lastname?: string;
   password?: string;
   username: string;
+  dailyReward: IDailyRewardModel;
 }
