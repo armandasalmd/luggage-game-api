@@ -1,8 +1,8 @@
 import { HttpController, IHttpResult, IUserRequest, Result } from "@core/logic";
 import { CreateLobbyRequest } from "@features/lobby/models/CreateLobbyRequest";
 import CreateLobbyUseCase from "./CreateLobbyUseCase";
-import { gamePrices, gameRules } from "@utils/Lobby";
 import { CreateLobbyResponse } from "@features/lobby/models/CreateLobbyResponse";
+import { gamePrices, gameRules } from "@utils/Lobby";
 
 export default class CreateLobbyController extends HttpController {
   protected async executeImpl(
