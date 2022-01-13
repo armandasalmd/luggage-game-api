@@ -21,6 +21,7 @@ const GameSchema = new Schema<IGameModel>({
   rulesMode: { type: String, required: true },
   players: [PlayerSchema],
   gamePrice: { type: Number, required: true },
+  gameStartDate: { type: Date, required: true }
 });
 
 export interface PlayerDocument extends IPlayerModel, Document {}
