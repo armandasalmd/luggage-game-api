@@ -11,4 +11,5 @@ export default interface IGameModel {
   roomId: string;
   rulesMode: GameRulesType;
   gamePrice: number;
+  gameStartDate: Date;
 }
