@@ -27,7 +27,7 @@ export function getGameRulesTitle(rules: GameRulesType | string): string {
 
 export function toPublicGame(lobby: ILobbyModel): IPublicGame {
   return {
-    modeTitle: getGameRulesTitle(lobby.gameRules),
+    modeTitle: getGameRulesTitle(lobby.gameRules)  + " (" + lobby.roomCode + ")",
     players: lobby.players?.length ?? 0,
     playersMax: lobby.playerCount,
     price: lobby.gamePrice,
@@ -37,7 +37,7 @@ export function toPublicGame(lobby: ILobbyModel): IPublicGame {
 
 export function toPublicGame2(lobby: IPublicLobbyModel): IPublicGame {
   return {
-    modeTitle: getGameRulesTitle(lobby.gameRules),
+    modeTitle: getGameRulesTitle(lobby.gameRules) + " (" + lobby.roomCode + ")",
     players: lobby.numberOfPlayers,
     playersMax: lobby.playerCount,
     price: lobby.gamePrice,
