@@ -17,7 +17,7 @@ export default class PublicLobbiesController extends HttpController {
   }
 
   private validation(body: PublicLobbiesRequest): IHttpResult | undefined {
-    if (body.pageNumber <= 0 || body.pageSize < 1) {
+    if (!body.pageNumber || !body.pageSize || body.pageNumber <= 0 || body.pageSize < 1) {
       return {
         statusCode: 200,
         body: {

@@ -6,9 +6,12 @@ import {
   ILobbyPlayerModel,
   UserModel,
   IUserModel,
+  ILobbyModel,
 } from "@database";
 import { JoinLobbyRequest } from "@features/lobby/models/JoinLobbyRequest";
 import { JoinLobbyResult } from "@features/lobby/models/JoinLobbyResult";
+import { toPublicGame } from "@utils/Lobby";
+import PublicLobbiesManager from "../publicLobbies/PublicLobbiesManager";
 
 export default class JoinLobbyUseCase
   implements IUseCase<JoinLobbyRequest, JoinLobbyResult>
@@ -39,6 +42,8 @@ export default class JoinLobbyUseCase
 
     const existingPlayer = this.findPlayer(lobby.players, user.username);
     if (existingPlayer) {
+      this.updatePublicLobbies(lobby);
+
       return Result.ok({
         joinedPlayer: existingPlayer,
         lobbyState: lobby,
@@ -54,11 +59,18 @@ export default class JoinLobbyUseCase
 
     lobby.players.push(lobbyPlayer);
     await lobby.save();
+    this.updatePublicLobbies(lobby);
 
     return Result.ok({
       joinedPlayer: lobbyPlayer,
       lobbyState: lobby,
     });
+  }
+
+  private updatePublicLobbies(lobby: ILobbyModel) {
+    if (!lobby.isPrivate) {
+      PublicLobbiesManager.getInstance().update(toPublicGame(lobby));
+    }
   }
 
   private async userHasEnoughCoins(

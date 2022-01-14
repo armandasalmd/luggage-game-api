@@ -6,6 +6,7 @@ import { EnvConfig, PassportConfig } from "@core/config";
 import { IPayload } from "@core/interfaces";
 import { registerSocketRoutersOnSocket } from "@core/socket";
 import GetGameRoomIdUseCase from "@features/game/actions/getGameRoomId/GetGameRoomIdUseCase";
+import PublicLobbiesManager from "@features/lobby/actions/publicLobbies/PublicLobbiesManager";
 
 /**
  * Socket routers
@@ -29,6 +30,8 @@ export default class SocketApp {
     this.io.on("connection", this.onConnection.bind(this));
 
     this.setupAdminPage();
+
+    PublicLobbiesManager.getInstance(this.io); // Initialise public lobbies manager
     SocketApp.instance = this;
   }
 
@@ -59,13 +62,15 @@ export default class SocketApp {
     // runs all the time client connects to the server
     registerSocketRoutersOnSocket(socket, [LobbySocketRouter, GameSocketRouter]);
 
-    const resultPromise = (new GetGameRoomIdUseCase()).execute(socket.data.user.username);
-    
-    resultPromise.then((result) => {
-      if (result.value) socket.join(result.value);
-    }).catch(() => {
-      console.warn("Could not rejoin active game");
-    });
+    const resultPromise = new GetGameRoomIdUseCase().execute(socket.data.user.username);
+
+    resultPromise
+      .then((result) => {
+        if (result.value) socket.join(result.value);
+      })
+      .catch(() => {
+        console.warn("Could not rejoin active game");
+      });
 
     socket.on("disconnect", this.onDisconnection.bind(this, socket));
   }

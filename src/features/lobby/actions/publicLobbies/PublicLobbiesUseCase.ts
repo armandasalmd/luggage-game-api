@@ -24,7 +24,7 @@ export default class PublicLobbiesUseCase
     const totalCount = await LobbyModel.count(query);
     const pagesCount = getPagesCount(totalCount, req.pageSize);
     
-    if (totalCount < req.pageNumber * req.pageSize) {
+    if (totalCount < (req.pageNumber - 1) * req.pageSize) {
       return Result.ok({
         currentPage: req.pageNumber,
         pagesCount,
@@ -45,8 +45,7 @@ export default class PublicLobbiesUseCase
     } catch {
       return Result.fail("Unexpected error");
     }
-
-
+    
     const result: PublicLobbiesResponse = {
       currentPage: req.pageNumber,
       pagesCount,

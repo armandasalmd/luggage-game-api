@@ -6,6 +6,7 @@ import {
   ILobbyPlayerModel,
   GameModel
 } from "@database";
+import PublicLobbiesManager from "@features/lobby/actions/publicLobbies/PublicLobbiesManager";
 import { Deck } from "@utils/Deck";
 import GameUtils from "@utils/Game";
 
@@ -43,6 +44,10 @@ export default class StartGameUseCase
     };
 
     const gameModel = new GameModel(gameModelTemplate);
+
+    if (!lobby.isPrivate) {
+      PublicLobbiesManager.getInstance().remove(lobby.roomCode);
+    }
 
     await gameModel.save();
 

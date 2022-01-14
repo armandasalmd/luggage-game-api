@@ -1,4 +1,5 @@
 export type EmitEventType =
+  | "lobbies changed"
   | "lobby player joined"
   | "lobby player left"
   | "lobby player ready"
@@ -9,3 +10,5 @@ export type EmitEventType =
   | "game finished"
   | "game reward"
   | "game looser";
+
+export const PublicLobbiesRoom = "publicLobbies";
