@@ -9,7 +9,8 @@ import {
   IUserModel,
 } from "@database";
 import { IPayload } from "@core/interfaces";
-import { genRoomCode } from "@utils/Lobby";
+import { genRoomCode, toPublicGame } from "@utils/Lobby";
+import PublicLobbiesManager from "../publicLobbies/PublicLobbiesManager";
 
 export default class CreateLobbyUseCase implements IUseCase<CreateLobbyRequest, CreateLobbyResponse>
 {
@@ -53,6 +54,8 @@ export default class CreateLobbyUseCase implements IUseCase<CreateLobbyRequest, 
       const lobbyResult = await lobby.save();
 
       if (lobbyResult) {
+        this.addToPublicLobbies(lobbyDetails);
+
         return Result.ok<CreateLobbyResponse>({
           roomCode: lobbyResult.roomCode,
           players: [creatorPlayer],
@@ -78,5 +81,9 @@ export default class CreateLobbyUseCase implements IUseCase<CreateLobbyRequest, 
 
   private async codeExists(roomCode: string): Promise<boolean> {
     return !!(await LobbyModel.findOne({ roomCode }));
+  }
+
+  private addToPublicLobbies(lobby: ILobbyModel): void {
+    if (!lobby.isPrivate) PublicLobbiesManager.getInstance().add(toPublicGame(lobby));
   }
 }

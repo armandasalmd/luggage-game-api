@@ -66,3 +66,7 @@ export function dateDiffInHours(d1: Date, d2: Date): number {
 
   return Math.floor((t2 - t1) / 3_600_000);
 }
+
+export function getPagesCount(totalCount: number, pageSize: number): number {
+  return Math.round(Math.ceil(totalCount / pageSize));
+}

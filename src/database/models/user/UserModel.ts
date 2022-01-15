@@ -4,7 +4,7 @@ import IUserModel from "./IUserModel";
 
 const DailyRewardSchema = new Schema<IDailyRewardModel>({
   lastClaimDay: { type: Number, required: true, default: 0 },
-  lastClaimDate: Date
+  lastClaimDate: Date,
 });
 
 const UserSchema = new Schema<IUserModel>({
@@ -16,7 +16,7 @@ const UserSchema = new Schema<IUserModel>({
   lastname: String,
   password: String,
   username: { type: String, required: true },
-  dailyReward: DailyRewardSchema
+  dailyReward: { type: DailyRewardSchema, default: { lastClaimDay: 0, lastClaimDate: new Date() } },
 });
 
 UserSchema.virtual("payload").get(function () {
