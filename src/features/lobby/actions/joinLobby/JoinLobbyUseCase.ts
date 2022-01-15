@@ -40,14 +40,8 @@ export default class JoinLobbyUseCase
       return Result.fail(`${lobby.gamePrice} coins are required to join`);
     }
 
-    const existingPlayer = this.findPlayer(lobby.players, user.username);
-    if (existingPlayer) {
-      this.updatePublicLobbies(lobby);
-
-      return Result.ok({
-        joinedPlayer: existingPlayer,
-        lobbyState: lobby,
-      });
+    if (lobby.players.find(item => item.username === user.username)) {
+      return Result.fail("You are connected in other tab session");
     }
 
     const lobbyPlayer: ILobbyPlayerModel = {
@@ -82,13 +76,6 @@ export default class JoinLobbyUseCase
     });
 
     return !!user && user.coins >= gameCost;
-  }
-
-  private findPlayer(
-    players: ILobbyPlayerModel[],
-    username: string
-  ): ILobbyPlayerModel {
-    return players.find((player) => player.username === username);
   }
 
   private getAvailableSeat(
