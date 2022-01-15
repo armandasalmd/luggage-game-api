@@ -46,7 +46,7 @@ export default class CreateLobbyUseCase implements IUseCase<CreateLobbyRequest, 
       gameRules: req.gameRules,
       state: "active",
       roomCode,
-      players: [creatorPlayer],
+      players: [],
     };
 
     try {
