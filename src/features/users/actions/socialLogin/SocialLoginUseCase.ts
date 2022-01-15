@@ -19,13 +19,19 @@ export default class SocialLoginUseCase implements IUseCase<SocialLoginQuery, So
 
       await user.save();
     } else if (!user) {
+      const username = await this.makeUsernameAsync(request.email);
+
+      if (!username) {
+        return Result.fail("Cannot allocate a username");
+      }
+
       const newUserProps: Partial<IUserModel> = {
         email: request.email,
         firstname: request.firstname,
         lastname: request.lastname,
         authStrategies: [request.provider],
         coins: 10000,
-        username: this.makeUsername(request.email),
+        username,
       };
 
       if (request.avatarUrl !== undefined) {
@@ -43,9 +49,22 @@ export default class SocialLoginUseCase implements IUseCase<SocialLoginQuery, So
     return Result.ok(result);
   }
 
-  private makeUsername(email: string): string {
-    const atIdx = email.indexOf("@");
+  /**
+   * Function creates a username from email and adds number
+   * in the end if duplicate username was found
+   */
+  private async makeUsernameAsync(email: string): Promise<string> {
+    const baseName = email.substring(0, email.indexOf("@"));
+    let username = baseName;
 
-    return email.substring(0, atIdx);
+    for (let i = 1; i < 20; i++) {
+      if (!await UserModel.exists({username})) {
+        return username;
+      }
+
+      username = baseName + i.toString();
+    }
+
+    return "";
   }
 }
