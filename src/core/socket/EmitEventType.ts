@@ -3,6 +3,7 @@ export type EmitEventType =
   | "lobby player joined"
   | "lobby player left"
   | "lobby player ready"
+  | "lobby player waved"
   | "game can start"
   | "game details change"
   | "game my state change"

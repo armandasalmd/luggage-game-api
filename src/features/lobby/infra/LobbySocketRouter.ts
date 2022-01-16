@@ -3,6 +3,7 @@ import JoinLobbyController from "../actions/joinLobby/JoinLobbySocketController"
 import LeaveLobbyController from "../actions/leaveLobby/LeaveLobbySocketController";
 import PlayerReadyController from "../actions/playerReady/PlayerReadyController";
 import SubscribeToLobbiesController from "../actions/publicLobbies/SubscribeToLobbiesSocketController";
+import WaveController from "../actions/wave/WaveSocketController";
 
 const joinLobbyEvent: ISocketEvent<string> = {
   eventName: "lobby join",
@@ -24,8 +25,13 @@ const subscribeToLobbiesEvent: ISocketEvent<boolean> = {
   controller: new SubscribeToLobbiesController(),
 };
 
+const waveEvent: ISocketEvent<string> = {
+  eventName: "lobby wave",
+  controller: new WaveController(),
+};
+
 const LobbySocketRouter: ISocketRouter = {
-  events: [joinLobbyEvent, leaveLobbyEvent, playerReadyEvent, subscribeToLobbiesEvent],
+  events: [joinLobbyEvent, leaveLobbyEvent, playerReadyEvent, subscribeToLobbiesEvent, waveEvent],
 };
 
 export { LobbySocketRouter, leaveLobbyEvent };
