@@ -10,7 +10,13 @@ import IGameModel from "./models/game/IGameModel";
 import IPlayerModel from "./models/game/IPlayerModel";
 import GameModel, { GameDocument, PlayerDocument } from "./models/game/GameModel";
 
+import IFriendModel, { FriendState } from "./models/friend/IFriendModel";
+import FriendModel, { FriendDocument } from "./models/friend/FriendModel";
+
+import { paginatedFind } from "./paginatedFind";
+
 export {
+  paginatedFind,
   AuthStrategy,
   LobbyModel,
   ILobbyModel,
@@ -27,5 +33,9 @@ export {
   PlayerDocument,
   IDailyRewardModel,
   DailyRewardState,
-  DailyRewardDocument
+  DailyRewardDocument,
+  IFriendModel,
+  FriendModel,
+  FriendDocument,
+  FriendState
 };

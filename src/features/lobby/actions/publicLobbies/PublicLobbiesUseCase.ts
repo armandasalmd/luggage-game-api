@@ -3,7 +3,7 @@ import { FilterQuery } from "mongoose";
 import { IUseCase, Result } from "@core/logic";
 import { PublicLobbiesRequest } from "@features/lobby/models/PublicLobbiesRequest";
 import { PublicLobbiesResponse } from "@features/lobby/models/PublicLobbiesResponse";
-import { LobbyModel, ILobbyModel, LobbyDocument } from "@database";
+import { LobbyModel, ILobbyModel, LobbyDocument, paginatedFind } from "@database";
 import { IPublicGame } from "@features/lobby/models/IPublicGame";
 import { getPagesCount } from "@utils/Global";
 import { GameRulesType } from "@utils/Lobby";
@@ -23,34 +23,36 @@ export default class PublicLobbiesUseCase
 
     const totalCount = await LobbyModel.count(query);
     const pagesCount = getPagesCount(totalCount, req.pageSize);
-    
+
     if (totalCount < (req.pageNumber - 1) * req.pageSize) {
       return Result.ok({
         currentPage: req.pageNumber,
         pagesCount,
         games: [],
-        totalResults: totalCount
+        totalResults: totalCount,
       });
-    } 
+    }
 
     let lobbies: IPublicLobbyModel[] = [];
 
     try {
-      lobbies = await LobbyModel.aggregate([
-        { $match: query },
-        { $skip: req.pageSize * (req.pageNumber - 1) },
-        { $limit: req.pageSize },
-        { $project: { numberOfPlayers: { $size: "$players" }, gameRules: 1, playerCount: 1, gamePrice: 1, roomCode: 1 } },
-      ]);
+      const projection = {
+        numberOfPlayers: { $size: "$players" },
+        gameRules: 1,
+        playerCount: 1,
+        gamePrice: 1,
+        roomCode: 1,
+      };
+      lobbies = await paginatedFind(LobbyModel, req, query, projection);
     } catch {
       return Result.fail("Unexpected error");
     }
-    
+
     const result: PublicLobbiesResponse = {
       currentPage: req.pageNumber,
       pagesCount,
       totalResults: totalCount,
-      games: lobbies.map(this.toPublicGame)
+      games: lobbies.map(this.toPublicGame),
     };
 
     return Result.ok(result);
@@ -62,7 +64,7 @@ export default class PublicLobbiesUseCase
       players: lobby.numberOfPlayers,
       playersMax: lobby.playerCount,
       price: lobby.gamePrice,
-      roomId: lobby.roomCode
+      roomId: lobby.roomCode,
     };
   }
 }

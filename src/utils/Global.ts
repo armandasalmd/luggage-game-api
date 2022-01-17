@@ -33,7 +33,7 @@ export function getEmptyErrors(obj: object): object {
 
   if (emptyProps.length > 0) {
     const resultBody = {
-      errors: {}
+      errors: {},
     };
 
     for (const prop of emptyProps) {
@@ -69,4 +69,8 @@ export function dateDiffInHours(d1: Date, d2: Date): number {
 
 export function getPagesCount(totalCount: number, pageSize: number): number {
   return Math.round(Math.ceil(totalCount / pageSize));
+}
+
+export function escapeRegExp(text: string) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
