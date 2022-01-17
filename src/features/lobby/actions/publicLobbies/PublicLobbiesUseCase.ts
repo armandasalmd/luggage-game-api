@@ -16,7 +16,7 @@ export default class PublicLobbiesUseCase
   implements IUseCase<PublicLobbiesRequest, PublicLobbiesResponse>
 {
   async execute(req: PublicLobbiesRequest): Promise<Result<PublicLobbiesResponse>> {
-    const query: FilterQuery<LobbyDocument> = { isPrivate: false };
+    const query: FilterQuery<LobbyDocument> = { isPrivate: false, state: "active" };
 
     if (req.gameMode !== undefined) query.gameRules = req.gameMode as GameRulesType;
     if (req.gamePrice !== undefined) query.gamePrice = req.gamePrice;
