@@ -15,7 +15,7 @@ const UserSchema = new Schema<IUserModel>({
   firstname: String,
   lastname: String,
   password: String,
-  username: { type: String, required: true },
+  username: { type: String, required: true, index: true, unique: true },
   dailyReward: { type: DailyRewardSchema, default: { lastClaimDay: 0, lastClaimDate: new Date() } },
 });
 

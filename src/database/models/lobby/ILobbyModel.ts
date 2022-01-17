@@ -1,3 +1,4 @@
+import ILobbyInviteModel from "./ILobbyInviteModel";
 import { GameRulesType, LobbyStateType } from "@utils/Lobby";
 import ILobbyPlayerModel from "./ILobbyPlayerModel";
 
@@ -8,5 +9,6 @@ export default interface ILobbyModel {
   gameRules: GameRulesType;
   state: LobbyStateType;
   players?: ILobbyPlayerModel[];
+  intives?: ILobbyInviteModel[];
   roomCode: string;
 }
