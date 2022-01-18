@@ -5,3 +5,4 @@ export { IPaginatedResult } from "./IPaginatedResult";
 export { IPayload } from "./IPayload";
 export { IRoute } from "./IRoute";
 export { IUserRequest } from "./IUserRequest";
+export { ISuccessResult } from "./ISuccessResult";

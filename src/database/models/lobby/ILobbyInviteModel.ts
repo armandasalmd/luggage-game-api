@@ -7,6 +7,6 @@ export enum LobbyInviteState {
 }
 
 export default interface ILobbyInviteModel {
-  user: Types.ObjectId | IUserModel;
+  username: string;
   state: LobbyInviteState;
 }

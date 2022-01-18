@@ -3,6 +3,7 @@ import IDailyRewardModel, { DailyRewardState } from "./models/user/IDailyRewardM
 import IUserModel, { AuthStrategy } from "./models/user/IUserModel";
 
 import LobbyModel, { LobbyDocument, LobbyPlayerDocument } from "./models/lobby/LobbyModel";
+import ILobbyInviteModel, { LobbyInviteState } from "./models/lobby/ILobbyInviteModel";
 import ILobbyPlayerModel from "./models/lobby/ILobbyPlayerModel";
 import ILobbyModel from "./models/lobby/ILobbyModel";
 
@@ -37,5 +38,7 @@ export {
   IFriendModel,
   FriendModel,
   FriendDocument,
-  FriendState
+  FriendState,
+  ILobbyInviteModel,
+  LobbyInviteState
 };
