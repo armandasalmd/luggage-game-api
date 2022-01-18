@@ -96,4 +96,10 @@ export default class SocketApp {
 
     next(new Error("No authentication found. Access denied"));
   }
+
+  public getSocketId(username: string): string {
+    for (const [_, socket] of this.io.sockets.sockets.entries()) {
+      if (socket.data.user.username === username) return socket.id;
+    }
+  }
 }

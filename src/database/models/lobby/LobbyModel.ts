@@ -4,7 +4,7 @@ import ILobbyModel from "./ILobbyModel";
 import ILobbyPlayerModel from "./ILobbyPlayerModel";
 
 const LobbyInviteSchema = new Schema<ILobbyInviteModel>({
-  user: { type: Schema.Types.ObjectId, ref: "user" },
+  username: { type: String, required: true },
   state: { type: String, default: LobbyInviteState.Pending, enum: LobbyInviteState }
 });
 
@@ -23,7 +23,7 @@ const LobbySchema = new Schema<ILobbyModel>({
   state: { type: String, required: true },
   roomCode: { type: String, required: true },
   players: [LobbyPlayerSchema],
-  intives: [LobbyInviteSchema]
+  invites: [LobbyInviteSchema]
 });
 
 export interface LobbyInviteDocument extends ILobbyInviteModel, Document {}

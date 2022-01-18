@@ -9,6 +9,6 @@ export default interface ILobbyModel {
   gameRules: GameRulesType;
   state: LobbyStateType;
   players?: ILobbyPlayerModel[];
-  intives?: ILobbyInviteModel[];
+  invites?: ILobbyInviteModel[];
   roomCode: string;
 }
