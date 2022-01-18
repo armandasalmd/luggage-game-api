@@ -24,15 +24,13 @@ export class GetFriendsUseCase implements IUseCase<GetFriendsQuery, GetFriendsRe
       state: 1,
     };
 
+    let friends: IAggregatedFriend[];
+
     if (query.includeAvatar) {
       dbProject.avatar1 = 1;
       dbProject.avatar2 = 1;
-    }
-
-    let friends: IAggregatedFriend[];
-
-    // Construct db aggregation query/pipeline to include avatars
-    if (query.includeAvatar) {
+      
+      // Construct db aggregation query/pipeline to include avatars
       friends = await FriendModel.aggregate([
         { $match: dbQuery },
         { $lookup: { from: "users", localField: "user1", foreignField: "_id", as: "user1" } },
@@ -57,7 +55,7 @@ export class GetFriendsUseCase implements IUseCase<GetFriendsQuery, GetFriendsRe
     return {
       state: friend.state,
       username: friend.username1 === this.forUsername ? friend.username2 : friend.username1,
-      avatar: friend.username1 === this.forUsername ? friend.avatar1 : friend.avatar2
+      avatar: friend.username1 === this.forUsername ? friend.avatar2 : friend.avatar1
     } as IFriendUser;
   }
 }
