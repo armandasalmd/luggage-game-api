@@ -17,13 +17,9 @@ const UserPrivateRouter: IRoute = {
   authRequired: true,
 };
 
-UserRouter.router.post("/login", (req, res) => new LoginController().execute(req, res));
-UserRouter.router.post("/register", (req, res) => new RegisterController().execute(req, res));
-UserPrivateRouter.router.get("/coinsAndRewards", (req, res) =>
-  new GetCoinsAndRewardsController().execute(req, res)
-);
-UserPrivateRouter.router.post("/claimReward", (req, res) =>
-  new ClaimDailyRewardController().execute(req, res)
-);
+UserRouter.router.post("/login", new LoginController().toRoute());
+UserRouter.router.post("/register", new RegisterController().toRoute());
+UserPrivateRouter.router.get("/coinsAndRewards", new GetCoinsAndRewardsController().toRoute());
+UserPrivateRouter.router.post("/claimReward", new ClaimDailyRewardController().toRoute());
 
 export { UserRouter, UserPrivateRouter };
