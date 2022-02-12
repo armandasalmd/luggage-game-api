@@ -12,10 +12,10 @@ const FriendsRouter: IRoute = {
   authRequired: true,
 };
 
-FriendsRouter.router.post("/search", (req, res) => new SearchController().execute(req, res));
-FriendsRouter.router.post("/add", (req, res) => new AddFriendController().execute(req, res));
-FriendsRouter.router.get("/friendsAndInvites", (req, res) => new FriendsAndInvitesController().execute(req, res));
-FriendsRouter.router.delete("/", (req, res) => new RemoveFriendController().execute(req, res));
-FriendsRouter.router.post("/respondInvite", (req, res) => new RespondInviteController().execute(req, res));
+FriendsRouter.router.post("/search", new SearchController().toRoute());
+FriendsRouter.router.post("/add", new AddFriendController().toRoute());
+FriendsRouter.router.get("/friendsAndInvites", new FriendsAndInvitesController().toRoute());
+FriendsRouter.router.delete("/", new RemoveFriendController().toRoute());
+FriendsRouter.router.post("/respondInvite", new RespondInviteController().toRoute());
 
 export { FriendsRouter };

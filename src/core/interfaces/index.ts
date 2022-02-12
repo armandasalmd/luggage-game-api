@@ -6,3 +6,4 @@ export { IPayload } from "./IPayload";
 export { IRoute } from "./IRoute";
 export { IUserRequest } from "./IUserRequest";
 export { ISuccessResult } from "./ISuccessResult";
+export * from "./IResponseBody";

@@ -10,8 +10,8 @@ const LobbyRouter: IRoute = {
   authRequired: true,
 };
 
-LobbyRouter.router.post("/", (req, res) => new CreateLobbyController().execute(req, res));
-LobbyRouter.router.post("/getPublic", (req, res) => new PublicLobbiesController().execute(req, res));
-LobbyRouter.router.post("/inviteFriend", (req, res) => new InviteFriendController().execute(req, res));
+LobbyRouter.router.post("/", new CreateLobbyController().toRoute());
+LobbyRouter.router.post("/getPublic", new PublicLobbiesController().toRoute());
+LobbyRouter.router.post("/inviteFriend", new InviteFriendController().toRoute());
 
 export { LobbyRouter };

@@ -1,138 +1,87 @@
 import { Request, Response } from "express";
-import { Result } from "./Result";
-import { IHttpError, IHttpResult } from "@core/interfaces";
+import { Result } from ".";
+import { IHttpError, IHttpResult, IResponseBody } from "@core/interfaces";
+
+type ExecuteReturnType = void | IHttpResult | Result<any>;
 
 export abstract class HttpController {
+
+  public toRoute() {
+    return (req: Request, res: Response) => this.execute(req, res);
+  }
+
   protected req: Request;
   protected res: Response;
 
-  protected abstract executeImpl(
-    req?: Request,
-    res?: Response
-  ): Promise<void | IHttpResult | Result<any>>;
+  protected abstract executeImpl(req?: Request, res?: Response): Promise<ExecuteReturnType>;
 
-  public execute(req: Request, res?: Response): void {
-    this.req = req;
-    this.res = res;
-
-    try {
-      const promise: Promise<void | IHttpResult | Result<any>> = this.executeImpl(req, res);
-
-      promise.then((result: void | IHttpResult) => {
-        if (result instanceof Result) {
-          this.respondWithResult(result);
-        } else if (result) {
-          this.json(result.statusCode, result.body);
-        }
-      });
-    } catch (err) {
-      this.fail("Cannot execute given request");
-    }
+  /**
+   * =======================
+   *   RESPONSE SHORTHANDS
+   * =======================
+   */  
+  protected clientError(message?: string) {
+    return this.jsonMessage(400, message ? message : "Wrong request");
   }
 
-  private static jsonResponse(
-    res: Response,
-    code: number,
-    message: string
-  ) {
-    return res.status(code).json({ message, statusCode: code });
+  protected conflict(message?: string) {
+    return this.jsonMessage(409, message || "Conflict");
   }
 
-  public ok<T>(dto?: T) {
-    if (!!dto) {
-      return this.res.status(200).json(dto);
-    } else {
-      return this.res.sendStatus(200);
-    }
+  protected tooMany(message?: string) {
+    return this.jsonMessage(429, message || "Too many requests");
   }
 
-  public created(res: Response) {
-    return res.sendStatus(201);
-  }
-
-  public json(code: number, body: any) {
+  /**
+   * =======================
+   *       CORE LOGIC
+   * =======================
+   */  
+  protected json(code: number, body: any) {
+    // Single responding funtion - important
     return this.res.status(code).json(body);
   }
 
-  public clientError(message?: string) {
-    return HttpController.jsonResponse(
-      this.res,
-      400,
-      message ? message : "Wrong request"
-    );
+  protected ok<T>(dto?: T) {
+    if (dto)
+      return this.json(200, dto);
+    else
+      return this.res.sendStatus(200);
   }
 
-  public unauthorized(message?: string) {
-    return HttpController.jsonResponse(
-      this.res,
-      401,
-      message ? message : "Unauthorized"
-    );
+  protected fail(error: IHttpError | string) {
+    // console.log(`Fail: ${error.message || error}`);
+    if (typeof error === "string") return this.jsonMessage(500, error);
+    else if (error.body) return this.json(error.statusCode, error.body);
+    else return this.jsonMessage(error.statusCode, error.message);
   }
 
-  public paymentRequired(message?: string) {
-    return HttpController.jsonResponse(
-      this.res,
-      402,
-      message ? message : "Payment required"
-    );
+  protected respondWithResult(result: Result<any>) {
+    return result.isFailure ? this.fail(result.error) : this.ok(result.value);
   }
 
-  public forbidden(message?: string) {
-    return HttpController.jsonResponse(
-      this.res,
-      403,
-      message ? message : "Forbidden"
-    );
+  protected execute(req: Request, res: Response): void {
+    this.req = req;
+    this.res = res;
+
+    this.executeImpl(req, res)
+      .then((result: ExecuteReturnType) => {
+        if (result instanceof Result)
+          this.respondWithResult(result);
+        else if (result)
+          this.json(result.statusCode, result.body);
+        else
+          this.ok();
+      })
+      .catch((_error) => {
+        this.fail("Cannot execute given request");
+      });
   }
 
-  public notFound(message?: string) {
-    return HttpController.jsonResponse(
-      this.res,
-      404,
-      message ? message : "Not found"
-    );
-  }
+  private jsonMessage(statusCode: number, message?: string) {
+    const body: IResponseBody = { statusCode };
+    if (message) body.message = message;
 
-  public conflict(message?: string) {
-    return HttpController.jsonResponse(
-      this.res,
-      409,
-      message ? message : "Conflict"
-    );
-  }
-
-  public tooMany(message?: string) {
-    return HttpController.jsonResponse(
-      this.res,
-      429,
-      message ? message : "Too many requests"
-    );
-  }
-
-  public fail(error: IHttpError | string) {
-    if (typeof error === "string") {
-      console.log(`Fail: ${error}`);
-
-      return this.res.status(500).json({ statusCode: 500, message: error });
-    } else {
-      console.log(`Fail: ${error.message}`);
-      if (error.body) {
-        return this.res.status(error.statusCode).json(error.body);
-      } else {
-        return this.res.status(error.statusCode).json({
-          statusCode: error.statusCode,
-          message: error.message,
-        });
-      }
-    }
-  }
-
-  public respondWithResult(result: Result<any>) {
-    if (result.isFailure) {
-      this.fail(result.error);
-    } else {
-      this.ok(result.value);
-    }
+    return this.json(statusCode, body);
   }
 }
