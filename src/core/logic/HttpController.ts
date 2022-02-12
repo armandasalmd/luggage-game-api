@@ -70,8 +70,6 @@ export abstract class HttpController {
           this.respondWithResult(result);
         else if (result)
           this.json(result.statusCode, result.body);
-        else
-          this.ok();
       })
       .catch((_error) => {
         this.fail("Cannot execute given request");
