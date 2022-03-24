@@ -2,11 +2,13 @@ import { Types } from "mongoose";
 import IUserModel from "../user/IUserModel";
 
 export enum LobbyInviteState {
-  Pending = "pending",
-  Accepted = "accepted"
+  Accepted = "accepted",
+  Pending = "pending"
 }
 
 export default interface ILobbyInviteModel {
-  username: string;
+  dateCreated: Date;
+  senderUsername: string;
   state: LobbyInviteState;
+  username: string;
 }

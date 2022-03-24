@@ -2,6 +2,7 @@ import { Schema, model, Document } from "mongoose";
 import IFriendModel, { FriendState } from "./IFriendModel";
 
 const FriendSchema = new Schema<IFriendModel>({
+  dateCreated: { type: Date, required: true, default: new Date() },
   friendsSince: { type: Date, required: false },
   requestingUser: { type: String, required: true },
   state: { type: String, default: FriendState.Pending, enum: FriendState, required: true },

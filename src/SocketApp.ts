@@ -4,7 +4,7 @@ import { Server, Socket } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
 import { EnvConfig, PassportConfig } from "@core/config";
 import { IPayload } from "@core/interfaces";
-import { registerSocketRoutersOnSocket } from "@core/socket";
+import { EmitEventType, registerSocketRoutersOnSocket } from "@core/socket";
 import GetGameRoomIdUseCase from "@features/game/actions/getGameRoomId/GetGameRoomIdUseCase";
 import PublicLobbiesManager from "@features/lobby/actions/publicLobbies/PublicLobbiesManager";
 
@@ -97,9 +97,20 @@ export default class SocketApp {
     next(new Error("No authentication found. Access denied"));
   }
 
-  public getSocketId(username: string): string {
+  public getSocket(username: string): Socket {
     for (const [_, socket] of this.io.sockets.sockets.entries()) {
-      if (socket.data.user.username === username) return socket.id;
+      if (socket.data.user.username === username) return socket;
     }
+  }
+
+  public tryEmitToUsername(username: string, eventName: EmitEventType, payload: any): boolean {
+    const socket: Socket = this.getSocket(username);
+
+    if (socket) {
+      this.io.to(socket.id).emit(eventName, payload);
+      return true;
+    }
+
+    return false;
   }
 }

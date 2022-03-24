@@ -23,7 +23,8 @@ export class GetInvitesUseCase implements IUseCase<string, GetInvitesResult> {
       username1: 1,
       username2: 2,
       avatar1: 1,
-      avatar2: 1
+      avatar2: 1,
+      dateCreated: 1
     };
 
     const pendings: IAggregatedFriend[] = await FriendModel.aggregate([
@@ -45,7 +46,8 @@ export class GetInvitesUseCase implements IUseCase<string, GetInvitesResult> {
     return {
       state: friend.state,
       username: clientUsername === friend.username1 ? friend.username2 : friend.username1,
-      avatar: clientUsername === friend.username1 ? friend.avatar2 : friend.avatar1
+      avatar: clientUsername === friend.username1 ? friend.avatar2 : friend.avatar1,
+      dateCreated: friend.dateCreated
     };
   }
 }

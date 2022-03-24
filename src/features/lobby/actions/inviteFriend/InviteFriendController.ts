@@ -2,16 +2,11 @@ import { Server } from "socket.io";
 
 import { HttpController, IUserRequest, ISuccessResult, Result } from "@core/logic";
 import { InviteFriendRequest } from "@features/lobby/models/InviteFriendRequest";
-import SocketApp from "../../../../SocketApp";
 import InviteFriendUseCase from "./InviteFriendUseCase";
+import PushNotificationsUseCase from "@features/notifications/actions/pushNotifications/PushNotificationsUseCase";
+import { INotification } from "@features/notifications/models/INotification";
 
 export class InviteFriendController extends HttpController {
-  private socketApp: SocketApp;
-
-  public constructor() {
-    super();
-    this.socketApp = SocketApp.getInstance();
-  }
 
   protected async executeImpl(
     req: IUserRequest<InviteFriendRequest>
@@ -31,13 +26,10 @@ export class InviteFriendController extends HttpController {
       return this.createError(result.error.message);
     }
 
-    // const userSocketId = this.socketApp.getSocketId(req.body.username);
-
-    // if (userSocketId !== "") {
-    //   // TODO: fire notification
-    //   console.log("Socket", userSocketId);
-    // }
-    // else invited user is offline
+    new PushNotificationsUseCase().execute({
+      notifications: [result.value.notification],
+      recipientUsername: req.body.username
+    });
 
     return Result.ok({ success: true });
   }

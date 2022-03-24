@@ -42,6 +42,7 @@ export class SearchUseCase implements IUseCase<SearchRequest, SearchResponse> {
       username: user.username,
       avatar: user.avatar,
       state: existing ? existing.state : FriendState.None,
+      dateCreated: new Date()
     };
   }
 
