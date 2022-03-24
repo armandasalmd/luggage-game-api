@@ -27,13 +27,13 @@ export default class FinishTurnUseCase
 
     if (!game) return Result.fail("Game not found");
 
-    game.activeSeatId = this.getNextSeatId(game);
-
     const player = game.players.find(
       (item) => item.username === query.username
-    );
-
+      );
+      
     if (!player) return Result.fail("Player not found");
+
+    game.activeSeatId = this.getNextSeatId(game);
 
     this.checkAndApplyTakehome(game, player);
     this.drawCardsIfNeeded(game, player);
@@ -72,7 +72,7 @@ export default class FinishTurnUseCase
         await lobby.save();
       }
 
-      looser = await this.chargeLooser(game);
+      looser = await this.updateLooser(game);
     }
 
     await game.save();
@@ -138,7 +138,7 @@ export default class FinishTurnUseCase
     );
   }
 
-  private async chargeLooser(game: IGameModel): Promise<Looser> {
+  private async updateLooser(game: IGameModel): Promise<Looser> {
     const looser = game.players.find((item) => item.playerState === "playing");
 
     if (looser) {
@@ -147,10 +147,10 @@ export default class FinishTurnUseCase
         amount: -game.gamePrice,
         username: looser.username,
       });
+      looser.playerState = GameUtils.getPlayerPlace(game.players.length);
     } else {
       console.warn("Looser cannot be charged. Not found");
     }
-
     return {
       price: game.gamePrice,
       username: looser.username,

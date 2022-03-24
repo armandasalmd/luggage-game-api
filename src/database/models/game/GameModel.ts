@@ -17,7 +17,7 @@ const GameSchema = new Schema<IGameModel>({
   sourceDeck: [{ type: String, required: true }],
   running: { type: Boolean, required: true, default: true },
   activeSeatId: { type: Number, required: true, default: 1 },
-  roomId: { type: String, required: true },
+  roomId: { type: String, required: true, index: true, unique: true },
   rulesMode: { type: String, required: true },
   players: [PlayerSchema],
   gamePrice: { type: Number, required: true },
