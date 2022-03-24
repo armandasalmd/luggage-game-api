@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Result } from ".";
 import { IHttpError, IHttpResult, IResponseBody } from "@core/interfaces";
+import { EnvConfig } from "@core/config";
 
 type ExecuteReturnType = void | IHttpResult | Result<any>;
 
@@ -71,8 +72,14 @@ export abstract class HttpController {
         else if (result)
           this.json(result.statusCode, result.body);
       })
-      .catch((_error) => {
-        this.fail("Cannot execute given request");
+      .catch((error) => {
+        const config = new EnvConfig();
+
+        if (config.isDevelopment) {
+          this.fail(error.message);
+        } else {
+          this.fail("Cannot execute given request");
+        }
       });
   }
 
