@@ -1,4 +1,5 @@
 export type EmitEventType =
+  | "notifications push"
   | "lobbies changed"
   | "lobby player joined"
   | "lobby player left"

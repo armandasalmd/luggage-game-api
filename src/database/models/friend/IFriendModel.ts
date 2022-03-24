@@ -8,6 +8,7 @@ export enum FriendState {
 }
 
 export default interface IFriendModel {
+  dateCreated: Date;
   friendsSince?: Date;
   requestingUser: string;
   state: FriendState;

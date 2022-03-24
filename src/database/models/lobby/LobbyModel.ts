@@ -4,8 +4,10 @@ import ILobbyModel from "./ILobbyModel";
 import ILobbyPlayerModel from "./ILobbyPlayerModel";
 
 const LobbyInviteSchema = new Schema<ILobbyInviteModel>({
-  username: { type: String, required: true },
-  state: { type: String, default: LobbyInviteState.Pending, enum: LobbyInviteState }
+  dateCreated: { type: Date, required: true, default: new Date() },
+  senderUsername: { type: String, required: true },
+  state: { type: String, default: LobbyInviteState.Pending, enum: LobbyInviteState },
+  username: { type: String, required: true }
 });
 
 const LobbyPlayerSchema = new Schema<ILobbyPlayerModel>({

@@ -1,5 +1,6 @@
 import { HttpController, IHttpResult, IUserRequest } from "@core/logic";
 import { AddFriendRequest } from "@features/friends/models/AddFriendRequest";
+import PushNotificationsUseCase from "@features/notifications/actions/pushNotifications/PushNotificationsUseCase";
 import { AddFriendUseCase } from "./AddFriendUseCase";
 
 export class AddFriendController extends HttpController {
@@ -15,14 +16,16 @@ export class AddFriendController extends HttpController {
       return this.errorResponse("Cannot add yourself");
     }
 
-    req.body.clientUserId = req.user.id;
-    req.body.clientUsername = req.user.username;
-
-    const result = await useCase.execute(req.body);
+    const result = await useCase.execute(req.body, req.user);
 
     if (result.isFailure) {
       return this.errorResponse(result.error.message);
     }
+
+    new PushNotificationsUseCase().execute({
+      notifications: [result.value.notification],
+      recipientUsername: req.body.friendUsername
+    });
 
     this.ok();
   }
