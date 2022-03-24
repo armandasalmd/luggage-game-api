@@ -65,7 +65,7 @@ export default class InviteFriendUseCase
   }
 
   private createNotification(invite: ILobbyInviteModel, lobby: ILobbyModel): INotification {
-    const description = invite.senderUsername + " has invited you to join lobby " + lobby.gameRules + " game lobby";
+    const description = invite.senderUsername + " has invited you to join " + lobby.gameRules + " game lobby";
     const metaData: LobbyMetaData = {
       players: lobby.players?.length ?? 0,
       playersMax: lobby.playerCount,
