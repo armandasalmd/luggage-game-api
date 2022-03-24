@@ -59,7 +59,7 @@ export default class LobbyNotificationsUseCase implements IUseCase<string, Notif
   }
 
   private toNotification(invite: IAggregateLobbyInvite): INotification {
-    const description = invite.invite.senderUsername + " has invited you to join " + invite.gameRules + "game lobby";
+    const description = invite.invite.senderUsername + " has invited you to join " + invite.gameRules + " game lobby";
 
     return {
       date: invite.invite.dateCreated,

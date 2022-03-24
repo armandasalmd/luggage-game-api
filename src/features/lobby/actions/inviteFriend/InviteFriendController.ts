@@ -26,10 +26,14 @@ export class InviteFriendController extends HttpController {
       return this.createError(result.error.message);
     }
 
-    new PushNotificationsUseCase().execute({
-      notifications: [result.value.notification],
-      recipientUsername: req.body.username
-    });
+    try {
+      new PushNotificationsUseCase().execute({
+        notifications: [result.value.notification],
+        recipientUsername: req.body.username
+      });
+    } catch {
+      console.warn("Cannot push add friend notification");
+    }
 
     return Result.ok({ success: true });
   }
