@@ -12,6 +12,6 @@ const GameRouter: IRoute = {
 
 GameRouter.router.post("/getState", new GetGameStateController().toRoute());
 GameRouter.router.get("/findActive", new GetRunningGameController().toRoute());
-GameRouter.router.get("/history", new HistoryController().toRoute());
+GameRouter.router.post("/history", new HistoryController().toRoute());
 
 export { GameRouter };
