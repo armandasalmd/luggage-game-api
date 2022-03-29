@@ -24,6 +24,7 @@ export default class HistoryUseCase implements IUseCase<HistoryRequest, HistoryR
     try {
       games = await GameModel.aggregate([
         { $match: filter },
+        { $sort: { gameStartDate: -1 } },
         { $skip: (request.pageNumber - 1) * request.pageSize },
         { $limit: request.pageSize },
         { 
@@ -48,8 +49,7 @@ export default class HistoryUseCase implements IUseCase<HistoryRequest, HistoryR
             playerCount: 1,
             place: 1
           }
-        },
-        { $sort: { gameStartDate: -1 } }
+        }
       ]);
     } catch (_err) {
       return Result.fail(_err);
