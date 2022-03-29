@@ -14,6 +14,9 @@ import GameModel, { GameDocument, PlayerDocument } from "./models/game/GameModel
 import IFriendModel, { FriendState } from "./models/friend/IFriendModel";
 import FriendModel, { FriendDocument } from "./models/friend/FriendModel";
 
+import ILogModel, { LogType } from "./models/log/ILogModel";
+import LogModel from "./models/log/LogModel";
+
 import { paginatedFind } from "./paginatedFind";
 
 export {
@@ -40,5 +43,8 @@ export {
   FriendDocument,
   FriendState,
   ILobbyInviteModel,
-  LobbyInviteState
+  LobbyInviteState,
+  ILogModel,
+  LogModel,
+  LogType
 };

@@ -1,5 +1,6 @@
 import { IUseCase, Result } from "@core/logic";
-import { UserDocument, UserModel, IUserModel } from "@database";
+import { UserDocument, UserModel, IUserModel, LogType } from "@database";
+import PushLogUseCase from "@features/logs/actions/PushLogUseCase";
 import { SocialLoginQuery } from "@features/users/models/SocialLoginQuery";
 import SocialLoginResult from "@features/users/models/SocialLoginResult";
 import { getPayload } from "@utils/User";
@@ -41,6 +42,12 @@ export default class SocialLoginUseCase implements IUseCase<SocialLoginQuery, So
       user = new UserModel(newUserProps);
       await user.save();
     }
+
+    new PushLogUseCase().execute({
+      message: `${user.username} logged in (${request.provider})`,
+      username: user.username,
+      type: LogType.Login
+    });
 
     const result: SocialLoginResult = {
       userPayload: getPayload(user),

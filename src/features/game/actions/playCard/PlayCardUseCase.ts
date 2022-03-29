@@ -1,8 +1,9 @@
 import { IUseCase, Result } from "@core/logic";
 import { PlayCardQuery } from "@features/game/models/PlayCardQuery";
 import { PlayCardResult } from "@features/game/models/PlayCardResult";
-import { GameModel, GameDocument, PlayerDocument, IGameModel } from "@database";
+import { GameModel, GameDocument, PlayerDocument, IGameModel, LogType } from "@database";
 import GameUtils from "@utils/Game";
+import PushLogUseCase from "@features/logs/actions/PushLogUseCase";
 
 export default class PlayCardUseCase
   implements IUseCase<PlayCardQuery, PlayCardResult>
@@ -32,7 +33,13 @@ export default class PlayCardUseCase
 
     this.resetPlayDeckIfNeeded(game, request.cards);
 
-    await game.save();
+    await game.save().catch((e) => {
+      new PushLogUseCase().execute({
+        message: e.message,
+        type: LogType.DatabaseException,
+        username: request.username
+      });
+    });
 
     return Result.ok({
       newGameDetailsState: GameUtils.toGameDetails(game),
