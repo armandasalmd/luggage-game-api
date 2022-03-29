@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { Result } from ".";
-import { IHttpError, IHttpResult, IResponseBody } from "@core/interfaces";
+import { IHttpError, IHttpResult, IPayload, IResponseBody } from "@core/interfaces";
+import { LogType } from "@database";
 import { EnvConfig } from "@core/config";
+import PushLogUseCase from "@features/logs/actions/PushLogUseCase";
 
 type ExecuteReturnType = void | IHttpResult | Result<any>;
 
@@ -80,6 +82,12 @@ export abstract class HttpController {
         } else {
           this.fail("Cannot execute given request");
         }
+
+        new PushLogUseCase().execute({
+          message: error.message,
+          type: LogType.ControllerException,
+          username: (req.user as IPayload).username,
+        });
       });
   }
 

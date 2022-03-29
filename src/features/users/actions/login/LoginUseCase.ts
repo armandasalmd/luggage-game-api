@@ -4,12 +4,13 @@ import jwt from "jsonwebtoken";
 import { PassportConfig } from "@core/config";
 import { IHttpError } from "@core/interfaces";
 import { IUseCase, Result } from "@core/logic";
-import { UserModel, UserDocument } from "@database";
+import { UserModel, UserDocument, LogType } from "@database";
 import { LoginRequest } from "@features/users/models/LoginRequest";
 import { LoginResponse } from "@features/users/models/LoginResponse";
 import { getPayload } from "@utils/User";
 import { CoinsAndRewardsResponse } from "@features/users/models/CoinsAndRewardsResponse";
 import { getDailyRewards } from "@utils/Reward";
+import PushLogUseCase from "@features/logs/actions/PushLogUseCase";
 
 export class LoginUseCase implements IUseCase<LoginRequest, LoginResponse> {
   private passportConfig: PassportConfig;
@@ -57,6 +58,12 @@ export class LoginUseCase implements IUseCase<LoginRequest, LoginResponse> {
       coins: user.coins,
       rewards: getDailyRewards(user.dailyReward),
     };
+
+    new PushLogUseCase().execute({
+      message: `${user.username} logged in`,
+      username: user.username,
+      type: LogType.Login,
+    });
 
     return Result.ok<LoginResponse>({
       success: true,
