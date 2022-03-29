@@ -1,6 +1,6 @@
 import { IUseCase, Result } from "@core/logic";
 import { UserDocument, UserModel, IUserModel, LogType } from "@database";
-import PushLogUseCase from "@features/logs/actions/PushLogUseCase";
+import PushLogUseCase from "../../../logs/actions/PushLogUseCase";
 import { SocialLoginQuery } from "@features/users/models/SocialLoginQuery";
 import SocialLoginResult from "@features/users/models/SocialLoginResult";
 import { getPayload } from "@utils/User";
