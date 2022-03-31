@@ -19,9 +19,10 @@ function FacebookStrategy(options: IFacebookStrategyOptions) {
         done("Cannot retrieve your email from provider", false);
       }
 
+      const avatarUrl = `http://graph.facebook.com/${profile.id}/picture?type=large&width=216&height=216`;
       const useCase = new SocialLoginUseCase();
       const query: SocialLoginQuery = {
-        avatarUrl: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : "",
+        avatarUrl,
         email: profile.emails[0].value,
         firstname: profile.name.givenName,
         lastname: profile.name.familyName,
