@@ -11,14 +11,25 @@ export default class SocialLoginUseCase implements IUseCase<SocialLoginQuery, So
       email: request.email,
     });
 
-    if (user && !user.authStrategies.includes(request.provider)) {
-      user.authStrategies.push(request.provider);
+    if (user) {
+      let save = false;
 
-      if (!user.avatar && request.avatarUrl) {
-        user.avatar = request.avatarUrl;
+      if (!user.authStrategies.includes(request.provider)) {
+        user.authStrategies.push(request.provider);
+  
+        if (!user.avatar && request.avatarUrl) {
+          user.avatar = request.avatarUrl;
+        }
+        save = true;
       }
 
-      await user.save();
+      // User avatar changed, so we need to update it
+      if (user.avatar !== request.avatarUrl) {
+        user.avatar = request.avatarUrl;
+        save = true;
+      }
+
+      if (save) await user.save();
     } else if (!user) {
       const username = await this.makeUsernameAsync(request.email);
 
