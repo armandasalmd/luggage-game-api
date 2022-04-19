@@ -7,6 +7,7 @@ export class EnvConfig extends BaseConfig {
   public static allowedOrigins = [
     EnvConfig.productionDomain,
     EnvConfig.developmentDomain,
+    "https://luggage-game-1uoitvxv7-armandasbark.vercel.app",
   ];
 
   public get clientHostName(): string {
