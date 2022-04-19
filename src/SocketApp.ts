@@ -43,9 +43,8 @@ export default class SocketApp {
     return new Server(httpServer, {
       cors: {
         origin: [
-          "https://admin.socket.io",
-          "http://localhost:3000",
-          "https://luggage-game.vercel.app",
+          ...EnvConfig.allowedOrigins,
+          "https://admin.socket.io"
         ],
         credentials: true,
       },
