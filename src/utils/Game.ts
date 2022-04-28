@@ -5,6 +5,7 @@ import IPublicPlayerState from "@features/game/models/IPublicPlayerState";
 
 enum PlayerState {
   Playing = "playing",
+  Surrendered = "surrendered",
   First = "1st",
   Second = "2nd",
   Third = "3rd",
@@ -58,10 +59,15 @@ const getReward = (gamePrice: number, playersCount: number, place: number) => {
   }
 };
 
+const getSurrenderReward = (gamePrice: number, playerCount: number) => {  
+  return Math.round(gamePrice * 0.95 / (playerCount - 1));
+};
+
 export default {
   PlayerState,
   getPlayerPlace,
   getReward,
+  getSurrenderReward,
   toGameDetails,
   toMyPlayerState,
   toPublicPlayerState,

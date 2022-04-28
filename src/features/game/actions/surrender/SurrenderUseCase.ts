@@ -33,14 +33,17 @@ export default class SurrenderUseCase implements IUseCase<string, GameFinishedRe
 
     game.running = false;
     game.activeSeatId = 0;
+
+    const thisPlayer = game.players.find((item) => item.username === username);
+    if (thisPlayer) thisPlayer.playerState = "surrendered";
+
     game.save();
 
     if (!(await this.addPlayerCoins(username, -lobby.gamePrice))) {
       return Result.fail("Cannot charge player " + username);
     }
 
-    const availableReward = lobby.gamePrice * 0.95;
-    const winReward = Math.round(availableReward / (lobby.playerCount - 1));
+    const winReward = GameUtils.getSurrenderReward(lobby.gamePrice, lobby.playerCount);
 
     if (!(await this.rewardPlayers(game, winReward))) {
       return Result.fail("Cannot reward players");
