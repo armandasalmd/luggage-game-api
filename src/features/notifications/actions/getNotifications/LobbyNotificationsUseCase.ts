@@ -27,7 +27,7 @@ export default class LobbyNotificationsUseCase implements IUseCase<string, Notif
         },
         {
           $addFields: {
-            playersNow: { $size:  "$players" },
+            playersNow: { $size: "$players" },
             invite: {
               $filter: {
                 input: "$invites",
