@@ -27,7 +27,7 @@ export default class RegisterUseCase implements IUseCase<RegisterRequest, Regist
     const newUser = new UserModel({
       username: request.username,
       password: await this.createHash(request.password),
-      coins: 10000
+      coins: 2500
     });
 
     const newUserResult: IUserModel = await newUser.save();

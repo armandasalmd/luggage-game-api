@@ -11,7 +11,7 @@ export class TakeLuggageUseCase implements UseCase {
     const { gameRepository, playerRepository } = getRepositories();
 
     const game = await gameRepository.fetch(input.gameId);
-    if (!game.deadCardsCount) return Result.fail("Game not found");
+    if (!game.gameRules) return Result.fail("Game not found");
 
     const player = await game.getActivePlayer();
     if (player.username !== input.username) return Result.fail("Please wait for your turn");

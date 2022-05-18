@@ -87,13 +87,13 @@ export class FinishTurnUseCase implements UseCase {
         }
       );
 
-      // Deduct coins for last player
-      const looserSeatId = [1, 2, 3, 4, 5].find((o) => !seatsDone.includes(o));
-      const looserUsername = game.players[looserSeatId];
-      await this.addCoins(-game.gamePrice, looserUsername);
-
       // Create history
       const players = await game.getAllPlayers();
+      const looserSeatId = [1, 2, 3, 4, 5].find((o) => !seatsDone.includes(o));
+      const looser = players.find(o => o.seatId === looserSeatId);
+      // Deduct coins for last player
+      await this.addCoins(-game.gamePrice, looser.username);
+
       const useCase = new CreateHistoryUseCase();
       useCase.execute(GameUtils.toFullGame(game, players));
 
@@ -102,7 +102,7 @@ export class FinishTurnUseCase implements UseCase {
 
       return {
         gameId: game.entityId,
-        looser: this.getPlayerReward(game, players.find(o => o.seatId === looserSeatId), true),
+        looser: this.getPlayerReward(game, looser, true),
         winners: players.filter(o => o.seatId !== looserSeatId).map(o => this.getPlayerReward(game, o, false)),
       };
     }
@@ -114,7 +114,8 @@ export class FinishTurnUseCase implements UseCase {
     
     return {
       username: player.username,
-      reward: GameUtils.getReward(game.gamePrice, game.players.length, place),
+      reward: looser ? -game.gamePrice : GameUtils.getReward(game.gamePrice, game.players.length, place),
+      playerState: looser ? dict[game.players.length - 1] : player.status,
     };
   }
 

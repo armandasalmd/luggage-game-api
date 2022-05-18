@@ -42,7 +42,7 @@ export default class SocialLoginUseCase implements IUseCase<SocialLoginQuery, So
         firstname: request.firstname,
         lastname: request.lastname,
         authStrategies: [request.provider],
-        coins: 10000,
+        coins: 5000,
         username,
       };
 
