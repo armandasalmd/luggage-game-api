@@ -1,24 +1,33 @@
-import { SocketController } from "@core/socket"
-import SurrenderUseCase from "./SurrenderUseCase";
+import { ISuccessResult } from "@core/interfaces";
+import { SocketController } from "@core/socket";
+import { SurrenderUseCase } from "./Surrender";
 
-export default class SurrenderSocketController extends SocketController<void> {
-  protected async executeImpl() {
+export class SurrenderSocketController extends SocketController<void> {
+  protected async executeImpl(): Promise<ISuccessResult> {
+    const { gameId, username } = this.user;
+
+    if (!gameId || !username) {
+      return {
+        success: false,
+        message: "No identity, please refresh the page",
+      };
+    }
+
     const useCase = new SurrenderUseCase();
-    const result = await useCase.execute(this.user.username);
+    const result = await useCase.execute({
+      gameId,
+      username,
+    });
 
     if (result.isFailure) {
       return {
         success: false,
-        message: result.error.message
+        message: result.error.message,
       };
     }
 
-    this.emitToRoom(result.value.roomId, "game details change", result.value.gameDetails);
-    this.emitToRoom(result.value.roomId, "game finished", result.value.winners);
+    this.emitToRoomAll(gameId, "game ended", result.value);
 
-    return {
-      success: true,
-      looseAmount: result.value.looseAmount
-    };
+    return { success: true };
   }
 }

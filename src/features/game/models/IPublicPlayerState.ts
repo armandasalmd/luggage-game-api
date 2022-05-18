@@ -1,7 +1,7 @@
-export default interface IPublicPlayerState {
-  username: string;
-  seatId: number;
-  luggageCards: string;
-  playerState: string;
+export interface IPublicPlayerState {
   handCardCount: number;
+  luggageCards: string;
+  seatId: number;
+  status: string;
+  username: string;
 }

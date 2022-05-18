@@ -1,16 +1,14 @@
 import { Socket } from "socket.io";
-import { IPayload } from "@core/interfaces";
-import { callIfFunction } from "@utils/Global";
+import { ISocketPayload } from "@core/interfaces";
 import type { EmitEventType } from "@core/socket";
+import { LogType } from "@database";
+import PushLogUseCase from "@features/logs/actions/PushLogUseCase";
+import { callIfFunction } from "@utils/Global";
 import SocketApp from "../../SocketApp";
 
 export default abstract class SocketController<T> {
   protected dataIn: T;
   protected socket: Socket;
-
-  protected get user(): IPayload {
-    return this.socket.data.user;
-  }
 
   protected abstract executeImpl(
     dataIn: T,
@@ -21,9 +19,16 @@ export default abstract class SocketController<T> {
     this.dataIn = dataIn;
     this.socket = socket;
 
-    const result = await this.executeImpl(dataIn, socket);
-
-    callIfFunction(callback, result);
+    try {
+      const result = await this.executeImpl(dataIn, socket);
+      callIfFunction(callback, result);
+    } catch (error) {
+      new PushLogUseCase().execute({
+        message: error.message,
+        type: LogType.SocketException,
+        username: this.user.username,
+      });
+    }
   }
 
   protected emitToAll(eventName: EmitEventType, payload: any) {
@@ -59,5 +64,13 @@ export default abstract class SocketController<T> {
   
   protected leaveRoom(roomId: string) {
     this.socket.leave(roomId);
+  }
+
+  protected get user(): ISocketPayload {
+    return this.socket.data.user as ISocketPayload;
+  }
+
+  protected set payloadGameId(value: string) {
+    this.socket.data.user.gameId = value;
   }
 }

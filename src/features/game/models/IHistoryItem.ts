@@ -1,7 +1,7 @@
 export interface IHistoryItem {
-  place: string; // PlayerState
-  reward: number;
-  playerCount: number;
-  roomId: string;
   date: Date;
+  place: string; // PlayerState
+  playerCount: number;
+  reward: number;
+  roomId: string;
 }

@@ -1,7 +1,7 @@
-export default interface IMyPlayerState {
-  seatId: number;
-  luggageCards: string;
+export interface IMyPlayerState {
   handCards: string[];
-  playerState: string;
-  lastMoves: string[];
+  luggageCards: string;
+  seatId: number;
+  status: string;
+  submitQueue?: string[];
 }

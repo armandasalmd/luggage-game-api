@@ -1,35 +1,51 @@
 import { ISocketEvent, ISocketRouter } from "@core/socket";
 
-import FinishTurnSocketController from "../actions/finishTurn/FinishTurnSocketController";
-import PlayCardSocketController from "../actions/playCard/PlayCardSocketController";
-import TakeLuggageSocketController from "../actions/takeLuggage/TakeLuggageSocketController";
-import SurrenderSocketController from "../actions/surrender/SurrenderSocketController";
-import { FinishTurnQuery } from "../models/FinishTurnQuery";
-import { PlayCardQuery } from "../models/PlayCardQuery";
-import { TakeLuggageQuery } from "../models/TakeLuggageQuery";
+import { FinishTurnSocketController } from "../actions/finishTurn";
+import { PlayCardsSocketController, PlayCardsRequest } from "../actions/playCards";
+import { SendEmojiSocketController, SendEmojiQuery } from "../actions/sendEmoji";
+import { SubscribeSocketController } from "../actions/subscribe";
+import { SurrenderSocketController } from "../actions/surrender";
+import { TakeLuggageSocketController, TakeLuggageRequest } from "../actions/takeLuggage";
 
-const playCardEvent: ISocketEvent<PlayCardQuery> = {
-  eventName: "game play card",
-  controller: new PlayCardSocketController(),
+const finishTurnEvent: ISocketEvent<void> = {
+  eventName: "game finish turn",
+  controller: () => new FinishTurnSocketController(),
 };
 
-const finishTurnEvent: ISocketEvent<FinishTurnQuery> = {
-  eventName: "game finish turn",
-  controller: new FinishTurnSocketController(),
+const playCardsEvent: ISocketEvent<PlayCardsRequest> = {
+  eventName: "game play cards",
+  controller: () => new PlayCardsSocketController(),
+};
+
+const sendEmojiEvent: ISocketEvent<SendEmojiQuery> = {
+  eventName: "game push emoji",
+  controller: () => new SendEmojiSocketController(),
+};
+
+const subscribeEvent: ISocketEvent<void> = {
+  eventName: "game subscribe",
+  controller: () => new SubscribeSocketController(),
 };
 
 const surrenderEvent: ISocketEvent<void> = {
   eventName: "game surrender",
-  controller: new SurrenderSocketController(),
+  controller: () => new SurrenderSocketController(),
 };
 
-const takeLuggageEvent: ISocketEvent<TakeLuggageQuery> = {
+const takeLuggageEvent: ISocketEvent<TakeLuggageRequest> = {
   eventName: "game take luggage",
-  controller: new TakeLuggageSocketController(),
+  controller: () => new TakeLuggageSocketController(),
 };
 
 const GameSocketRouter: ISocketRouter = {
-  events: [playCardEvent, finishTurnEvent, surrenderEvent, takeLuggageEvent],
+  events: [
+    sendEmojiEvent,
+    playCardsEvent,
+    subscribeEvent,
+    surrenderEvent,
+    finishTurnEvent,
+    takeLuggageEvent,
+  ],
 };
 
 export { GameSocketRouter };

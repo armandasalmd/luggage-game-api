@@ -17,34 +17,40 @@ import FriendModel, { FriendDocument } from "./models/friend/FriendModel";
 import ILogModel, { LogType } from "./models/log/ILogModel";
 import LogModel from "./models/log/LogModel";
 
+import { IGameLogModel } from "./models/gameLog/IGameLogModel";
+import GameLogModel, { GameLogDocument } from "./models/gameLog/GameLogModel";
+
 import { paginatedFind } from "./paginatedFind";
 
 export {
-  paginatedFind,
   AuthStrategy,
-  LobbyModel,
+  DailyRewardDocument,
+  DailyRewardState,
+  FriendDocument,
+  FriendModel,
+  FriendState,
+  GameDocument,
+  GameLogDocument,
+  GameLogModel,
+  GameModel,
+  IDailyRewardModel,
+  IFriendModel,
+  IGameLogModel,
+  IGameModel,
+  ILobbyInviteModel,
   ILobbyModel,
   ILobbyPlayerModel,
-  LobbyDocument,
-  LobbyPlayerDocument,
-  UserModel,
-  IUserModel,
-  UserDocument,
-  IGameModel,
-  IPlayerModel,
-  GameModel,
-  GameDocument,
-  PlayerDocument,
-  IDailyRewardModel,
-  DailyRewardState,
-  DailyRewardDocument,
-  IFriendModel,
-  FriendModel,
-  FriendDocument,
-  FriendState,
-  ILobbyInviteModel,
-  LobbyInviteState,
   ILogModel,
+  IPlayerModel,
+  IUserModel,
+  LobbyDocument,
+  LobbyInviteState,
+  LobbyModel,
+  LobbyPlayerDocument,
   LogModel,
-  LogType
+  LogType,
+  PlayerDocument,
+  UserDocument,
+  UserModel,
+  paginatedFind,
 };

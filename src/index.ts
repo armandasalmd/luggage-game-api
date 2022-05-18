@@ -8,6 +8,7 @@ import { LobbyRouter } from "@features/lobby/infra/LobbyHttpRouter";
 import { GameRouter } from "@features/game/infra/GameHttpRouter";
 import { FriendsRouter } from "@features/friends/infra/FriendsHttpRouter";
 import { NotificationRouter } from "@features/notifications/infra/NotificationsHttpRouter";
+import { LogRouter } from "@features/logs/infra/LogsHttpRouter";
 
 // Public routers
 const primaryRoutes = [UserRouter, TestPublicRouter, GoogleAuthRouter, FacebookAuthRouter];
@@ -20,6 +21,7 @@ const secondaryRoutes = [
   UserPrivateRouter,
   NotificationRouter,
   TestPrivateRouter,
+  LogRouter,
 ];
 
 const app = new App([].concat(primaryRoutes, secondaryRoutes), "/api");

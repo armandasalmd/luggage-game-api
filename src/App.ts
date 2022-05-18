@@ -11,6 +11,8 @@ import { IRoute } from "@core/interfaces";
 import PassportManager from "@core/auth/PassportManager";
 import { AuthMiddleware, CorsMiddleware } from "@core/middlewares";
 import SocketApp from "./SocketApp";
+import RedisManager from "./databaseRedis";
+
 class App {
   /**
    * Properties
@@ -46,6 +48,7 @@ class App {
     this.envConfig.validate();
     this.app.enable("trust proxy");
 
+    RedisManager.connect();
     this.connectToDatabase();
     this.initMiddlewares();
     this.passportManager.init();
@@ -96,11 +99,9 @@ class App {
   private initRoutes(routes: IRoute[]) {
     routes.forEach((route: IRoute) => {
       // If prefix exists for routes, extend with it
-      if (!!this.prefix)
-        route.path = path.join(this.prefix, route.path).split("\\").join("/");
+      if (!!this.prefix) route.path = path.join(this.prefix, route.path).split("\\").join("/");
       // Init router with auth required
-      if (route.authRequired)
-        this.app.use(route.path, AuthMiddleware, route.router);
+      if (route.authRequired) this.app.use(route.path, AuthMiddleware, route.router);
       // Init public router
       else this.app.use(route.path, route.router);
     });

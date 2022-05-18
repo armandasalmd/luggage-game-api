@@ -11,9 +11,7 @@ export class EnvConfig extends BaseConfig {
   ];
 
   public get clientHostName(): string {
-    return this.isProduction === true
-      ? EnvConfig.productionDomain
-      : EnvConfig.developmentDomain;
+    return this.isProduction === true ? EnvConfig.productionDomain : EnvConfig.developmentDomain;
   }
 
   public get port(): number {
@@ -43,11 +41,12 @@ export class EnvConfig extends BaseConfig {
       FACEBOOK_CLIENT_SECRET: str(),
     };
 
-    variables[
-      process.env.NODE_ENV === "development"
-        ? "MONGO_URI_DEV"
-        : "MONGO_URI_PROD"
-    ] = str();
+    variables[process.env.NODE_ENV === "development" ? "MONGO_URI_DEV" : "MONGO_URI_PROD"] = str();
     cleanEnv(process.env, variables);
+  }
+
+  public isSuperAdmin(username: string): boolean {
+    const admins = this.isProduction ? ["Nginx"] : ["test"];
+    return admins.includes(username);
   }
 }

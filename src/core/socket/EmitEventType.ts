@@ -6,11 +6,11 @@ export type EmitEventType =
   | "lobby player ready"
   | "lobby player waved"
   | "game can start"
-  | "game details change"
-  | "game my state change"
-  | "game player state change"
-  | "game finished"
-  | "game reward"
-  | "game looser";
+  | "game details changed"
+  | "game emoji"
+  | "game ended"
+  | "game luggage taken"
+  | "game player pushed cards"
+  | "game public player changed";
 
 export const PublicLobbiesRoom = "publicLobbies";

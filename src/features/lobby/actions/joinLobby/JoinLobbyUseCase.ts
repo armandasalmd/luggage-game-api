@@ -22,6 +22,7 @@ export default class JoinLobbyUseCase
   ): Promise<Result<JoinLobbyResult>> {
     const lobby: LobbyDocument = await LobbyModel.findOne({
       roomCode: request.roomId,
+      state: "active"
     });
 
     if (!lobby) {

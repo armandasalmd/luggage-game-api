@@ -23,6 +23,7 @@ module.exports = {
     alias: {
       "@core": path.resolve(__dirname, "src/core"),
       "@database": path.resolve(__dirname, "src/database"),
+      "@databaseRedis": path.resolve(__dirname, "src/databaseRedis"),
       "@features": path.resolve(__dirname, "src/features"),
       "@styles": path.resolve(__dirname, "src/styles"),
       "@utils": path.resolve(__dirname, "src/utils"),

@@ -1,46 +1,44 @@
 import { SocketController } from "@core/socket";
-import { FinishTurnQuery } from "@features/game/models/FinishTurnQuery";
-import FinishTurnUseCase from "./FinishTurnUseCase";
+import { FinishTurnUseCase } from "./FinishTurn";
+import { FinishTurnResponse } from "./FinishTurnModels";
 
-export default class FinishTurnSocketController extends SocketController<FinishTurnQuery> {
-  protected async executeImpl(query: FinishTurnQuery) {
-    if (!query.roomId) {
+export class FinishTurnSocketController extends SocketController<void> {
+  protected async executeImpl(): Promise<FinishTurnResponse> {
+    const { gameId, username } = this.user;
+
+    if (!gameId || !username) {
       return {
         success: false,
-        message: "RoomId cannot be empty",
+        message: "No identity, try refreshing the page",
       };
     }
 
-    query.username = this.user.username;
-
     const useCase = new FinishTurnUseCase();
-    const result = await useCase.execute(query);
+    const result = await useCase.execute({ gameId, username });
 
     if (result.isFailure) {
       return {
         success: false,
-        message: "Unexpected error occured",
+        message: result.error.message,
       };
     }
 
-    this.emitToRoomAll(
-      query.roomId,
-      "game details change",
-      result.value.gameDetails
-    );
-    this.emitToClient("game my state change", result.value.myState);
-
-    if (result.value.finishReward) {
-      this.emitToClient("game reward", result.value.finishReward);
-      this.emitToRoom(query.roomId, "game player state change", result.value.myPublicState);
+    // Socket events
+    this.emitToRoomAll(gameId, "game details changed", result.value.gameDetails);
+    
+    // Optional if top luggage is taken
+    if (result.value.myPublicState) {
+      this.emitToRoom(gameId, "game public player changed", result.value.myPublicState);
     }
 
-    if (result.value.looser) {
-      this.emitToRoomAll(query.roomId, "game looser", result.value.looser);
+    // Optional if game has finished
+    if (result.value.rewardsIfEnded) {
+      this.emitToRoomAll(gameId, "game ended", result.value.rewardsIfEnded);
     }
 
-    return {
+    return { 
       success: true,
+      myPlayerState: result.value.myState
     };
   }
 }

@@ -4,7 +4,7 @@ import JoinLobbyUseCase from "./JoinLobbyUseCase";
 export default class JoinLobbyController extends SocketController<string> {
   protected async executeImpl(dataIn: string) {
     const useCase = new JoinLobbyUseCase();
-    const result = await useCase.execute({ roomId: dataIn }, this.user);
+    const result = await useCase.execute({ roomId: dataIn }, this.user as any);
 
     if (result.isSuccess) {
       // send joined player object to other lobby players

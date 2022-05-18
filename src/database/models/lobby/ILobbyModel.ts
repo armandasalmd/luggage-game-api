@@ -3,12 +3,14 @@ import { GameRulesType, LobbyStateType } from "@utils/Lobby";
 import ILobbyPlayerModel from "./ILobbyPlayerModel";
 
 export default interface ILobbyModel {
-  playerCount: number;
+  createdAt: Date;
   gamePrice: number;
-  isPrivate: boolean;
   gameRules: GameRulesType;
-  state: LobbyStateType;
-  players?: ILobbyPlayerModel[];
+  isPrivate: boolean;
   invites?: ILobbyInviteModel[];
+  playerCount: number;
+  players?: ILobbyPlayerModel[];
   roomCode: string;
+  state: LobbyStateType;
+  gameEntityIds: string[];
 }

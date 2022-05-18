@@ -5,7 +5,6 @@ import { instrument } from "@socket.io/admin-ui";
 import { EnvConfig, PassportConfig } from "@core/config";
 import { IPayload } from "@core/interfaces";
 import { EmitEventType, registerSocketRoutersOnSocket } from "@core/socket";
-import GetGameRoomIdUseCase from "@features/game/actions/getGameRoomId/GetGameRoomIdUseCase";
 import PublicLobbiesManager from "@features/lobby/actions/publicLobbies/PublicLobbiesManager";
 
 /**
@@ -42,10 +41,7 @@ export default class SocketApp {
   private static createIOServer(httpServer: HttpServer): Server {
     return new Server(httpServer, {
       cors: {
-        origin: [
-          ...EnvConfig.allowedOrigins,
-          "https://admin.socket.io"
-        ],
+        origin: [...EnvConfig.allowedOrigins, "https://admin.socket.io"],
         credentials: true,
       },
     });
@@ -60,22 +56,11 @@ export default class SocketApp {
   private onConnection(socket: Socket): void {
     // runs all the time client connects to the server
     registerSocketRoutersOnSocket(socket, [LobbySocketRouter, GameSocketRouter]);
-
-    const resultPromise = new GetGameRoomIdUseCase().execute(socket.data.user.username);
-
-    resultPromise
-      .then((result) => {
-        if (result.value) socket.join(result.value);
-      })
-      .catch(() => {
-        console.warn("Could not rejoin active game");
-      });
-
     socket.on("disconnect", this.onDisconnection.bind(this, socket));
   }
 
   private onDisconnection(socket: Socket): void {
-    leaveLobbyEvent.controller.execute(undefined, () => undefined, socket);
+    leaveLobbyEvent.controller().execute(undefined, () => undefined, socket);
   }
 
   private authMiddleware(socket: Socket, next: any): void {
