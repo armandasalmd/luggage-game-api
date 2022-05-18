@@ -23,6 +23,7 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
+    "redis-om": "^0.3.3",
     "socket.io": "^4.4.0",
     "ts-loader": "^9.2.6",
     "ts-mongoose": "^0.0.24",
@@ -53,7 +54,7 @@
     "build": "webpack",
     "start": "node ./build/index.js",
     "start:dev": "SET NODE_ENV=development & webpack",
-    "run:dev": "SET NODE_ENV=development& nodemon --watch build build/index.js ",
+    "run:dev": "SET NODE_ENV=development& nodemon --watch build build/index.js",
     "linter": "tslint -c tslint.json -p tsconfig.json"
   }
 }

@@ -1,34 +1,43 @@
 import { SocketController } from "@core/socket";
-import { TakeLuggageQuery } from "@features/game/models/TakeLuggageQuery";
-import TakeLuggageUseCase from "./TakeLuggageUseCase";
+import { BaseEngine } from "@features/game/engine/BaseEngine";
+import { TakeLuggageRequest, TakeLuggageQuery } from "./TakeLuggageModels";
+import { TakeLuggageUseCase } from "./TakeLuggage";
+import { ISuccessResult } from "@core/interfaces";
 
-export default class TakeLuggageSocketController extends SocketController<TakeLuggageQuery> {
-  protected async executeImpl(dataIn: TakeLuggageQuery): Promise<any> {
-    if (!dataIn || !dataIn.luggageCard || !dataIn.roomId) {
+export class TakeLuggageSocketController extends SocketController<TakeLuggageRequest> {
+  protected async executeImpl(input: TakeLuggageRequest): Promise<ISuccessResult> {
+    if (!BaseEngine.isValid(input.luggageCard)) {
       return {
         success: false,
-        message: "Incorrect request"
+        message: "Invalid luggage card",
       };
     }
 
-    dataIn.username = this.user.username;
+    const { gameId, username } = this.user;
+    if (!gameId || !username) {
+      return {
+        success: false,
+        message: "Session expired",
+      };
+    }
 
+    const query: TakeLuggageQuery = {
+      luggageCards: [input.luggageCard],
+      gameId,
+      username,
+    };
     const useCase = new TakeLuggageUseCase();
-    const result = await useCase.execute(dataIn);
+    const result = await useCase.execute(query);
 
-    if (result.isFailure) {
-      return {
-        success: false,
-        message: result.error.message
-      };
-    }
-
-    this.emitToRoom(dataIn.roomId, "game player state change", result.value.newPublicState);
-    this.emitToClient("game my state change", result.value.newMyState);
+    // Notify other game players
+    this.emitToRoom(gameId, "game luggage taken", result.value);
+    this.emitToRoom(gameId, "game emoji", {
+      sender: username,
+      emojiId: "club-450439",
+    });
 
     return {
-      success: true
+      success: result.isSuccess,
     };
   }
-
 }

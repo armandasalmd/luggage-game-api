@@ -3,7 +3,7 @@ import { ISocketEvent, ISocketRouter } from ".";
 
 export function registerSocketEventForSocket(socket: Socket, event: ISocketEvent<unknown>) {
   socket.on(event.eventName, (message, callback) => {
-    event.controller.execute(message, callback, socket);
+    event.controller().execute(message, callback, socket);
   });
 }
 

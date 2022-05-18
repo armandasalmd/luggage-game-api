@@ -1,23 +1,17 @@
-import { HttpController, IHttpResult, IUserRequest, Result } from "@core/logic";
-import GetGameStateRequest from "@features/game/models/GetGameStateRequest";
-import { GetGameStateResponse } from "@features/game/models/GetGameStateResponse";
-import GetGameStateUseCase from "./GetGameStateUseCase";
+import { HttpValidatedController, IUserRequest } from "@core/logic";
+import { GetGameStateRequest } from "./GetGameStateModels";
+import { GetGameStateUseCase } from "./GetGameState";
 
-export default class GetGameStateController extends HttpController {
-  protected async executeImpl(req: IUserRequest<GetGameStateRequest>): Promise<Result<GetGameStateResponse> | IHttpResult> {
-    const roomId = req.body.roomId;
+export class GetGameStateController extends HttpValidatedController {
+  protected validationClass = GetGameStateRequest;
 
-    if (!roomId || typeof roomId !== "string") {
-      this.clientError("Please provide room id");
-      return;
-    }
-
+  protected async executeImpl(req: IUserRequest<GetGameStateRequest>) {
     const useCase = new GetGameStateUseCase();
     const result = await useCase.execute({
-      roomId,
-      requestingUsername: req.user.username
+      gameId: req.body.gameId,
+      username: req.user.username,
     });
-
+    
     this.respondWithResult(result);
   }
 }

@@ -1,6 +1,6 @@
 import { SocketController } from "@core/socket";
 import PlayerReadyUseCase from "./PlayerReadyUseCase";
-import StartGameUseCase from "@features/game/actions/startGame/StartGameUseCase";
+import { StartGameUseCase } from "@features/game/actions/startGame";
 
 export default class PlayerReadyController extends SocketController<void> {
   protected async executeImpl() {
@@ -17,12 +17,12 @@ export default class PlayerReadyController extends SocketController<void> {
       if (result.value.gameCanStart) {
         // Create game instance in db and then notify clients to start
         const startGameUseCase = new StartGameUseCase();
-        const startGameResult = await startGameUseCase.execute(
-          result.value.roomId
-        );
+        const startGameResult = await startGameUseCase.execute({
+          lobbyId: result.value.roomId
+        });
 
         if (startGameResult.isSuccess) {
-          this.emitToRoom(result.value.roomId, "game can start", {});
+          this.emitToRoomAll(result.value.roomId, "game can start", null);
         } else {
           return {
             success: false,
@@ -31,10 +31,7 @@ export default class PlayerReadyController extends SocketController<void> {
         }
       }
 
-      return {
-        success: true,
-        gameCanStart: result.value.gameCanStart,
-      };
+      return { success: true };
     }
 
     return {

@@ -16,6 +16,8 @@ export default class FriendNotificationsUseCase implements IUseCase<string, Noti
   }
 
   private toNotification(friendInvite: IFriendUser): INotification {
+    if (!friendInvite) return null;
+
     const metaData: FriendMetaData = {
       username: friendInvite.username
     };

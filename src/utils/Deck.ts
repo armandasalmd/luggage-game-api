@@ -1,4 +1,11 @@
-import CardUtils from "./Card";
+enum CardType {
+  Clubs = "C",
+  Diamonds = "D",
+  Hearts = "H",
+  Spades = "S",
+}
+
+const CardValues = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
 export class Deck {
   private static readonly SEPARATOR = ",";
@@ -12,8 +19,8 @@ export class Deck {
   public static createShuffledDeck(): Deck {
     const deck = [];
 
-    for (const type of CardUtils.CardTypes) {
-      for (const value of CardUtils.CardValues) {
+    for (const type of Object.values(CardType)) {
+      for (const value of CardValues) {
         deck.push(value + type);
       }
     }
@@ -51,7 +58,7 @@ export class Deck {
     if (count >= this.cards.length) {
       const result = [...this.cards];
       this.cards = [];
-      
+
       return result;
     }
 

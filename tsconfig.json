@@ -17,6 +17,7 @@
       "@core/*": ["./core/*"],
       "@database/*": ["./database/*"],
       "@database": ["./database"],
+      "@databaseRedis": ["./databaseRedis"],
       "@features/*": ["./features/*"],
       "@utils/*": ["./utils/*"]
     },

@@ -1,9 +1,10 @@
+import { FilterQuery } from "mongoose";
 import { IUseCase, Result } from "@core/logic";
-import { FriendModel, IFriendModel, FriendState } from "@database";
+import { FriendModel, IFriendModel, FriendState, LogType } from "@database";
 import { GetInvitesResult } from "@features/friends/models/GetInvitesResult";
 import { IFriendUser } from "@features/friends/models/IFriendUser";
+import PushLogUseCase from "@features/logs/actions/PushLogUseCase";
 import { escapeRegExp } from "@utils/Global";
-import { FilterQuery } from "mongoose";
 
 interface IAggregatedFriend extends IFriendModel {
   avatar1?: string;
@@ -27,19 +28,29 @@ export class GetInvitesUseCase implements IUseCase<string, GetInvitesResult> {
       dateCreated: 1
     };
 
-    const pendings: IAggregatedFriend[] = await FriendModel.aggregate([
-      { $match: dbQuery },
-      { $lookup: { from: "users", localField: "user1", foreignField: "_id", as: "user1" } },
-      { $lookup: { from: "users", localField: "user2", foreignField: "_id", as: "user2" } },
-      { $unwind: "$user1" },
-      { $unwind: "$user2" },
-      { $addFields: { avatar1: "$user1.avatar", avatar2: "$user2.avatar" } },
-      { $project: dbProject }
-    ]);
+    try {
+      const pendings: IAggregatedFriend[] = await FriendModel.aggregate([
+        { $match: dbQuery },
+        { $lookup: { from: "users", localField: "user1", foreignField: "_id", as: "user1" } },
+        { $lookup: { from: "users", localField: "user2", foreignField: "_id", as: "user2" } },
+        { $unwind: "$user1" },
+        { $unwind: "$user2" },
+        { $addFields: { avatar1: "$user1.avatar", avatar2: "$user2.avatar" } },
+        { $project: dbProject }
+      ]);
 
-    return Result.ok({
-      invites: pendings ? pendings.map(item => this.toFriendUser(item, clientUsername)) : []
-    });
+      return Result.ok({
+        invites: pendings ? pendings.map(item => this.toFriendUser(item, clientUsername)) : []
+      });
+    } catch {
+      new PushLogUseCase().execute({
+        message: "Failed to get invites (notifications)",
+        type: LogType.DatabaseException,
+        username: clientUsername
+      });
+
+      return Result.fail("Failed to get invites");
+    }
   }
 
   private toFriendUser(friend: IAggregatedFriend, clientUsername: string): IFriendUser {

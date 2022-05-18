@@ -40,6 +40,7 @@ export default class CreateLobbyUseCase implements IUseCase<CreateLobbyRequest, 
     }
 
     const lobbyDetails: ILobbyModel = {
+      createdAt: new Date(),
       playerCount: req.playerCount,
       gamePrice: req.gamePrice,
       isPrivate: req.isPrivate,
@@ -47,6 +48,7 @@ export default class CreateLobbyUseCase implements IUseCase<CreateLobbyRequest, 
       state: "active",
       roomCode,
       players: [],
+      gameEntityIds: [],
     };
 
     try {

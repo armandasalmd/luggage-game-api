@@ -1,6 +1,7 @@
 export enum LogType {
-  ControllerException = "controller-exception",
-  DatabaseException = "database-exception",
+  ControllerException = "controller-error",
+  DatabaseException = "database-error",
+  SocketException = "socket-error",
   Login = "login",
   None = "none",
 }

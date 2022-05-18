@@ -7,27 +7,27 @@ import WaveController from "../actions/wave/WaveSocketController";
 
 const joinLobbyEvent: ISocketEvent<string> = {
   eventName: "lobby join",
-  controller: new JoinLobbyController(),
+  controller: () => new JoinLobbyController(),
 };
 
 const leaveLobbyEvent: ISocketEvent<void> = {
   eventName: "lobby leave",
-  controller: new LeaveLobbyController(),
+  controller: () => new LeaveLobbyController(),
 };
 
 const playerReadyEvent: ISocketEvent<void> = {
   eventName: "lobby ready",
-  controller: new PlayerReadyController(),
+  controller: () => new PlayerReadyController(),
 };
 
 const subscribeToLobbiesEvent: ISocketEvent<boolean> = {
   eventName: "lobby public subscribe",
-  controller: new SubscribeToLobbiesController(),
+  controller: () => new SubscribeToLobbiesController(),
 };
 
 const waveEvent: ISocketEvent<string> = {
   eventName: "lobby wave",
-  controller: new WaveController(),
+  controller: () => new WaveController(),
 };
 
 const LobbySocketRouter: ISocketRouter = {

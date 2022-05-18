@@ -1,20 +1,27 @@
-import { HttpController, IUserRequest } from "@core/logic";
+import { HttpController, IUserRequest, Result } from "@core/logic";
 import { IResponseBody } from "@core/interfaces";
+import { NotificationsResult } from "@features/notifications/models/NotificationsResult";
 
 import GetNotificationsUseCase from "./GetNotificationsUseCase";
 
 export class GetNotificationsController extends HttpController {
   protected async executeImpl(req: IUserRequest<void>): Promise<void> {
-    const result = await new GetNotificationsUseCase().execute(req.user.username);
+    let result: Result<NotificationsResult>;
 
-    if (result.isFailure) {
-      this.fail(result.error);
+    try {
+      result = await new GetNotificationsUseCase().execute(req.user.username);
+    } catch {
+      this.fail("Server error");
       return;
     }
-
-    this.ok({
-      statusCode: 200,
-      data: result.value
-    } as IResponseBody);
+    
+    if (result.isFailure) {
+      this.fail(result.error);
+    } else {
+      this.ok({
+        statusCode: 200,
+        data: result.value
+      } as IResponseBody);
+    }
   }
 }

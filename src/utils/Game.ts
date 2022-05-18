@@ -1,9 +1,7 @@
-import { IGameModel, IPlayerModel } from "@database";
-import IGameDetails from "@features/game/models/IGameDetails";
-import IMyPlayerState from "@features/game/models/IMyPlayerState";
-import IPublicPlayerState from "@features/game/models/IPublicPlayerState";
+import { GameModel, PlayerModel } from "@databaseRedis";
+import { IFullGameModel, IGameDetails, IMyPlayerState, IPublicPlayerState } from "@features/game/models";
 
-enum PlayerState {
+export enum PlayerState {
   Playing = "playing",
   Surrendered = "surrendered",
   First = "1st",
@@ -13,30 +11,57 @@ enum PlayerState {
   Fifth = "5th",
 }
 
-const toGameDetails = (game: IGameModel): IGameDetails => {
+const toFullGame = (game: GameModel, players: PlayerModel[]): IFullGameModel => {
   return {
     activeSeatId: game.activeSeatId,
-    deadCardsCount: game.deadDeck.length,
-    sourceCardsCount: game.sourceDeck.length,
-    topPlayCard: game.playDeck[game.playDeck.length - 1] || "",
+    gameId: game.entityId,
+    deadCardsCount: game.deadCardsCount,
+    gamePrice: game.gamePrice,
+    gameRules: game.gameRules,
+    players: players.map((o) => ({
+      username: o.username,
+      status: o.status,
+      gameId: game.entityId,
+      handCards: o.handCards,
+      seatId: o.seatId,
+      entityId: o.entityId,
+      luggageCards: o.luggageCards,
+      submitQueue: o.submitQueue,
+    })),
+    seatsDone: game.seatsDone,
+    lobbyId: game.lobbyId,
+    playDeck: game.playDeck,
+    sourceDeck: game.sourceDeck,
   };
 };
 
-const toMyPlayerState = (player: IPlayerModel): IMyPlayerState => {
+const toGameDetails = (game: GameModel, includePlayDeck: boolean): IGameDetails => {
+  return {
+    activeSeatId: game.activeSeatId,
+    deadCardsCount: game.deadCardsCount,
+    gameId: game.entityId,
+    playDeck: includePlayDeck ? game.playDeck : undefined,
+    sourceDeckCount: game.sourceDeck.length,
+    price: game.gamePrice,
+    rules: game.gameRules,
+  };
+};
+
+const toMyPlayerState = (player: PlayerModel): IMyPlayerState => {
   return {
     handCards: player.handCards,
     luggageCards: player.luggageCards,
-    playerState: player.playerState,
     seatId: player.seatId,
-    lastMoves: player.lastMoves,
+    status: player.status,
+    submitQueue: player.submitQueue,
   };
 };
 
-const toPublicPlayerState = (player: IPlayerModel): IPublicPlayerState => {
+const toPublicPlayerState = (player: PlayerModel): IPublicPlayerState => {
   return {
     handCardCount: player.handCards.length,
     luggageCards: player.luggageCards,
-    playerState: player.playerState,
+    status: player.status,
     seatId: player.seatId,
     username: player.username,
   };
@@ -50,17 +75,17 @@ const getPlayerPlace = (place: number): string => {
 
 const getReward = (gamePrice: number, playersCount: number, place: number) => {
   const winnable = gamePrice * 0.95;
-  const reward = winnable * (playersCount - place) / arithmeticSum(playersCount);
+  const reward = (winnable * (playersCount - place)) / arithmeticSum(playersCount);
 
   return Math.round(reward);
 
   function arithmeticSum(n: number): number {
-    return n * (n - 1) / 2;
+    return (n * (n - 1)) / 2;
   }
 };
 
-const getSurrenderReward = (gamePrice: number, playerCount: number) => {  
-  return Math.round(gamePrice * 0.95 / (playerCount - 1));
+const getSurrenderReward = (gamePrice: number, playerCount: number) => {
+  return Math.round((gamePrice * 0.95) / (playerCount - 1));
 };
 
 export default {
@@ -68,6 +93,7 @@ export default {
   getPlayerPlace,
   getReward,
   getSurrenderReward,
+  toFullGame,
   toGameDetails,
   toMyPlayerState,
   toPublicPlayerState,

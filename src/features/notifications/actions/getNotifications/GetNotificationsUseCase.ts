@@ -21,9 +21,13 @@ export default class GetNotificationsUseCase implements IUseCase<string, Notific
 
   private sortNotifications(notifications: INotification[]): INotification[] {
     return notifications.sort((a, b) => {
-      if (a.date instanceof Date && b.date instanceof Date) {
-        return a.date.getTime() > b.date.getTime() ? -1 : 1;
-      }
+      try {
+        if (a.date instanceof Date && b.date instanceof Date) {
+          return a.date.getTime() > b.date.getTime() ? -1 : 1;
+        }
+        // tslint:disable-next-line:no-empty
+      } catch {}
+      
       return 0;
     });
   }

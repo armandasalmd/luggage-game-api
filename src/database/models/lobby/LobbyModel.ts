@@ -7,7 +7,7 @@ const LobbyInviteSchema = new Schema<ILobbyInviteModel>({
   dateCreated: { type: Date, required: true, default: new Date() },
   senderUsername: { type: String, required: true },
   state: { type: String, default: LobbyInviteState.Pending, enum: LobbyInviteState },
-  username: { type: String, required: true }
+  username: { type: String, required: true },
 });
 
 const LobbyPlayerSchema = new Schema<ILobbyPlayerModel>({
@@ -18,14 +18,16 @@ const LobbyPlayerSchema = new Schema<ILobbyPlayerModel>({
 });
 
 const LobbySchema = new Schema<ILobbyModel>({
-  playerCount: { type: Number, required: true },
+  createdAt: { type: Date, required: true, default: new Date() },
   gamePrice: { type: Number, required: true },
-  isPrivate: { type: Boolean, required: true },
   gameRules: { type: String, required: true },
-  state: { type: String, required: true },
-  roomCode: { type: String, required: true },
+  isPrivate: { type: Boolean, required: true },
+  invites: [LobbyInviteSchema],
+  playerCount: { type: Number, required: true },
   players: [LobbyPlayerSchema],
-  invites: [LobbyInviteSchema]
+  roomCode: { type: String, required: true },
+  state: { type: String, required: true },
+  gameEntityIds: { type: [String], required: true, default: [] },
 });
 
 export interface LobbyInviteDocument extends ILobbyInviteModel, Document {}
