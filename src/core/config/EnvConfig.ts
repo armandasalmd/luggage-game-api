@@ -39,6 +39,7 @@ export class EnvConfig extends BaseConfig {
       GOOGLE_CLIENT_SECRET: str(),
       FACEBOOK_CLIENT_ID: str(),
       FACEBOOK_CLIENT_SECRET: str(),
+      REDIS_URI: str()
     };
 
     variables[process.env.NODE_ENV === "development" ? "MONGO_URI_DEV" : "MONGO_URI_PROD"] = str();
