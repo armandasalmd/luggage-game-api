@@ -46,9 +46,14 @@ export class SurrenderUseCase implements UseCase {
           state: "gameStarted",
         },
         {
-          $set: {
+          $set: { 
             state: "gameFinished",
-          },
+            "players.$[elem].ready": false
+          }
+        },
+        {
+          multi: true,
+          arrayFilters: [ { "elem.ready": true } ]
         }
       );
 

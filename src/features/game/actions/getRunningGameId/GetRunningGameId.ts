@@ -14,6 +14,7 @@ export class GetRunningGameIdUseCase implements UseCase {
 
       return Result.ok({
         gameId: game?.entityId,
+        lobbyId: game?.lobbyId,
         success: !!game,
       });
     } catch (e) {
