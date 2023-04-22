@@ -1,8 +1,9 @@
+import { ISuccessResult } from "@core/interfaces";
 import { SocketController } from "@core/socket";
 import LeaveLobbyUseCase from "./LeaveLobbyUseCase";
 
 export default class LeaveLobbyController extends SocketController<void> {
-  protected async executeImpl() {
+  protected async executeImpl(): Promise<ISuccessResult> {
     const useCase = new LeaveLobbyUseCase();
     const result = await useCase.execute(this.user);
 
@@ -23,7 +24,7 @@ export default class LeaveLobbyController extends SocketController<void> {
 
     return {
       success: false,
-      errorMessage: result.error,
+      message: result.error.message,
     };
   }
 }

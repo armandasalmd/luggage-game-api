@@ -73,4 +73,8 @@ export default abstract class SocketController<T> {
   protected set payloadGameId(value: string) {
     this.socket.data.user.gameId = value;
   }
+
+  protected set payloadLobbyId(value: string) {
+    this.socket.data.user.lobbyId = value;
+  }
 }

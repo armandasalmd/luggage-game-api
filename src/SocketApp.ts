@@ -3,7 +3,7 @@ import { Server as HttpServer } from "http";
 import { Server, Socket } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
 import { EnvConfig, PassportConfig } from "@core/config";
-import { IPayload } from "@core/interfaces";
+import { IPayload, ISuccessResult } from "@core/interfaces";
 import { EmitEventType, registerSocketRoutersOnSocket } from "@core/socket";
 import PublicLobbiesManager from "@features/lobby/actions/publicLobbies/PublicLobbiesManager";
 
@@ -11,7 +11,7 @@ import PublicLobbiesManager from "@features/lobby/actions/publicLobbies/PublicLo
  * Socket routers
  */
 import { LobbySocketRouter, leaveLobbyEvent } from "@features/lobby/infra/LobbySocketRouter";
-import { GameSocketRouter } from "@features/game/infra/GameSocketRouter";
+import { GameSocketRouter, disconnectGameEvent } from "@features/game/infra/GameSocketRouter";
 
 export default class SocketApp {
   private static instance: SocketApp;
@@ -60,7 +60,12 @@ export default class SocketApp {
   }
 
   private onDisconnection(socket: Socket): void {
-    leaveLobbyEvent.controller().execute(undefined, () => undefined, socket);
+    leaveLobbyEvent.controller().execute(undefined, (result: ISuccessResult) => {
+      if (!result.success) {
+        // No lobby was disconnected, attempt to disconnect game instead
+        disconnectGameEvent.controller().execute(undefined, () => undefined, socket);
+      }
+    }, socket);
   }
 
   private authMiddleware(socket: Socket, next: any): void {
