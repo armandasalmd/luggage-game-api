@@ -6,4 +6,4 @@ Start dev server with: `yarn start:dev`
 
 ### API architecture in a nutshell
 
-<img width="1808" alt="LuggageGame API architecture (1)" src="https://user-images.githubusercontent.com/17089888/233835898-cfb99d53-2d4a-4495-b12a-6873fc7b4375.png">
+<img width="1808" alt="LuggageGame API architecture (2)" src="https://user-images.githubusercontent.com/17089888/233836438-4f772c66-4cf2-4363-b8eb-5ece7e19b04f.png">
