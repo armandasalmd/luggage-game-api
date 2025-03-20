@@ -58,18 +58,18 @@ jobs:
           name: node-app
           path: build/ # Ensure artifact is downloaded to build/
 
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_75B3EA00E4E64A48BC5A319E800E3EAE }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_13DA991CE9FA4F1E93556B232DF719A2 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C9678F7A309B49B99729CA7665009AB8 }}
+      # - name: Login to Azure
+      #   uses: azure/login@v2
+      #   with:
+      #     client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_75B3EA00E4E64A48BC5A319E800E3EAE }}
+      #     tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_13DA991CE9FA4F1E93556B232DF719A2 }}
+      #     subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C9678F7A309B49B99729CA7665009AB8 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'luggage-api'
-          slot-name: 'Production'
+          # slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: build/ # Point directly to the downloaded build folder
