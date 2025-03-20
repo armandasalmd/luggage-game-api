@@ -49,6 +49,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       contents: read # Required for actions/download-artifact
+      id-token: write   # For Azure login with OIDC
 
     steps:
       - name: Download artifact from build job
