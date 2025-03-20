@@ -35,11 +35,9 @@ jobs:
       - name: Build production bundle
         run: yarn build
 
-      - name: Copy dependencies to build
+      - name: Copy node_modules to build
         run: |
-          mkdir -p build/node_modules
-          cp -r node_modules/tslib build/node_modules/
-          cp -r node_modules/dotenv build/node_modules/
+          cp -r node_modules build/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
