@@ -4,4 +4,5 @@ export interface IPublicPlayerState {
   seatId: number;
   status: string;
   username: string;
+  connected: boolean;
 }

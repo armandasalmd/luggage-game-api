@@ -27,6 +27,7 @@ const toFullGame = (game: GameModel, players: PlayerModel[]): IFullGameModel => 
       entityId: o.entityId,
       luggageCards: o.luggageCards,
       submitQueue: o.submitQueue,
+      connected: o.connected
     })),
     seatsDone: game.seatsDone,
     lobbyId: game.lobbyId,
@@ -64,6 +65,7 @@ const toPublicPlayerState = (player: PlayerModel): IPublicPlayerState => {
     status: player.status,
     seatId: player.seatId,
     username: player.username,
+    connected: player.connected
   };
 };
 

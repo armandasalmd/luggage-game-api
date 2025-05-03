@@ -1,15 +1,27 @@
 import { ISocketEvent, ISocketRouter } from "@core/socket";
 
+import { DisconnectSocketController } from "../actions/disconnect";
 import { FinishTurnSocketController } from "../actions/finishTurn";
 import { PlayCardsSocketController, PlayCardsRequest } from "../actions/playCards";
+import { PlayAgainSocketController } from "../actions/playAgain";
 import { SendEmojiSocketController, SendEmojiQuery } from "../actions/sendEmoji";
 import { SubscribeSocketController } from "../actions/subscribe";
 import { SurrenderSocketController } from "../actions/surrender";
 import { TakeLuggageSocketController, TakeLuggageRequest } from "../actions/takeLuggage";
 
+const disconnectGameEvent: ISocketEvent<void> = {
+  eventName: "game disconnect",
+  controller: () => new DisconnectSocketController(),
+};
+
 const finishTurnEvent: ISocketEvent<void> = {
   eventName: "game finish turn",
   controller: () => new FinishTurnSocketController(),
+};
+
+const playAgainEvent: ISocketEvent<void> = {
+  eventName: "game play again",
+  controller: () => new PlayAgainSocketController(),
 };
 
 const playCardsEvent: ISocketEvent<PlayCardsRequest> = {
@@ -40,6 +52,7 @@ const takeLuggageEvent: ISocketEvent<TakeLuggageRequest> = {
 const GameSocketRouter: ISocketRouter = {
   events: [
     sendEmojiEvent,
+    playAgainEvent,
     playCardsEvent,
     subscribeEvent,
     surrenderEvent,
@@ -48,4 +61,4 @@ const GameSocketRouter: ISocketRouter = {
   ],
 };
 
-export { GameSocketRouter };
+export { GameSocketRouter, disconnectGameEvent };

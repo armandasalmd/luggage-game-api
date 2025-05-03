@@ -11,9 +11,11 @@ export class ClassicEngine extends BaseEngine {
     if (newCards.length <= 0) return false;
     const newSubmit = [...submitQueue, ...newCards];
     
-    if (playDeck.length <= 0 && newSubmit.length <= 2) {
+    if (playDeck.length <= 0 && 
+      newSubmit.length === 2 && 
+      this.value(newSubmit[0]) === this.value(newSubmit[1])) {
       // If 2 cards, then value must be the same
-      return newSubmit.length !== 2 || this.value(newSubmit[0]) === this.value(newSubmit[1]);
+      return true;
     }
     const topCard: string = playDeck[playDeck.length - 1];
 

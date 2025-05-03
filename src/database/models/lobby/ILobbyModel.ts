@@ -12,5 +12,4 @@ export default interface ILobbyModel {
   players?: ILobbyPlayerModel[];
   roomCode: string;
   state: LobbyStateType;
-  gameEntityIds: string[];
 }

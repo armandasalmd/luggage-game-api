@@ -11,6 +11,7 @@ export type EmitEventType =
   | "game ended"
   | "game luggage taken"
   | "game player pushed cards"
-  | "game public player changed";
+  | "game public player changed"
+  | "game player clicked play again";
 
 export const PublicLobbiesRoom = "publicLobbies";

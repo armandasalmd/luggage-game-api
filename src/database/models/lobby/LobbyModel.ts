@@ -12,7 +12,7 @@ const LobbyInviteSchema = new Schema<ILobbyInviteModel>({
 
 const LobbyPlayerSchema = new Schema<ILobbyPlayerModel>({
   avatar: String,
-  ready: { type: Boolean, required: true },
+  ready: { type: Boolean, required: true, default: false },
   seatId: { type: Number, required: true },
   username: { type: String, required: true },
 });
@@ -26,8 +26,7 @@ const LobbySchema = new Schema<ILobbyModel>({
   playerCount: { type: Number, required: true },
   players: [LobbyPlayerSchema],
   roomCode: { type: String, required: true },
-  state: { type: String, required: true },
-  gameEntityIds: { type: [String], required: true, default: [] },
+  state: { type: String, required: true }
 });
 
 export interface LobbyInviteDocument extends ILobbyInviteModel, Document {}

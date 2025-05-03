@@ -8,6 +8,7 @@ export interface PlayerModelProps {
   submitQueue: string[];
   status: string;
   username: string;
+  connected: boolean;
 }
 
 // tslint:disable-next-line
@@ -23,6 +24,7 @@ export const playerSchema = new Schema(PlayerModel, {
   submitQueue: { type: "string[]" },
   status: { type: "string" },
   username: { type: "string" },
+  connected: { type: "boolean" },
 }, {
   prefix: "player"
 });

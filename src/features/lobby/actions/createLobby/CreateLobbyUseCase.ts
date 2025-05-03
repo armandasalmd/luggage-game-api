@@ -24,7 +24,7 @@ export default class CreateLobbyUseCase implements IUseCase<CreateLobbyRequest, 
       avatar: user.avatar,
       username: user.username,
       ready: false,
-      seatId: 1,
+      seatId: 1
     };
 
     let roomCode: string;
@@ -47,8 +47,7 @@ export default class CreateLobbyUseCase implements IUseCase<CreateLobbyRequest, 
       gameRules: req.gameRules,
       state: "active",
       roomCode,
-      players: [],
-      gameEntityIds: [],
+      players: []
     };
 
     try {

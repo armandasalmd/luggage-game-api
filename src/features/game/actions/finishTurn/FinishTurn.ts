@@ -83,7 +83,14 @@ export class FinishTurnUseCase implements UseCase {
           state: "gameStarted",
         },
         {
-          $set: { state: "gameFinished" },
+          $set: { 
+            state: "gameFinished",
+            "players.$[elem].ready": false
+          }
+        },
+        {
+          multi: true,
+          arrayFilters: [ { "elem.ready": true } ]
         }
       );
 
